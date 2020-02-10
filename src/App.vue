@@ -23,6 +23,7 @@ export default {
   },
   mounted() {
         this.loadFromDatabase()
+        document.title = "Plantae"
   },
   data() { return {
       selected: 'Plantes',
