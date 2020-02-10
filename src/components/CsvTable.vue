@@ -14,9 +14,9 @@ td{
 
 <template>
 <div class="table">
-    <div>
+    <!-- <div>
         <vue-csv-import v-model="csv" :map-fields="['name', 'semis', 'recolte']"></vue-csv-import>
-    </div>
+    </div> -->
 
     <div>
         <table v-if="table != undefined">
@@ -69,8 +69,6 @@ export default {
         firstMonth: 0, // first month is the table as number
         selectedPlant: undefined // selected plant in table
     }},
-    computed: {
-    },
     watch: {
         csv: {
             deep: true,
