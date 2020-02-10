@@ -29,7 +29,7 @@
 <template>
 <div>
     <div class="vertical-menu" v-if="options !== undefined">
-        <a v-for="option in options" href="#" v-on:click="onClick(option)" :class="selected === option ? 'active':''">{{option}}</a>
+        <a v-for="option in options" :key="option" href="#" v-on:click="onClick(option)" :class="selected === option ? 'active':''">{{option}}</a>
     </div>
 </div>
 </template>

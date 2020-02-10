@@ -44,8 +44,8 @@ td div {
 <div style="width: 230px; margin: 0 auto;">
     <table>
         <tr><th colspan=4>{{label}}</th></tr>
-        <tr v-for="row in 3">
-            <td v-for="month in 4"> 
+        <tr v-for="row in 3" :key="row">
+            <td v-for="month in 4" :key="month"> 
                     <div class="left" v-on:click="() => toggleMonth((month-1) + (row-1) * 4)" :style="{backgroundColor: value.includes((month-1) + (row-1) * 4) ? selectedColor:defaultColor}"></div>
                     <div class="right" v-on:click="() => toggleMonth((month-1) + (row-1) * 4 +0.5)" :style="{backgroundColor: value.includes((month-1) + (row-1) * 4 +0.5) ? selectedColor:defaultColor}"></div>
                     <div class="month">{{monthAsString[(month-1) + (row-1) * 4]}}</div>
