@@ -93,11 +93,11 @@ center {
 
 
 <template>
-    <div :id="plant.name" :class="editMode? 'edit-mode':'read-mode'"><div :class="editMode? 'edit-mode-container':''">
-        <div v-if="!editMode" class="plant-image">
+    <div :id="plant.name" :class="expand? 'edit-mode':'read-mode'"><div :class="expand? 'edit-mode-container':''">
+        <div class="plant-image">
             <img :src="editedPlant.image"/>
         </div>
-        <input v-else type="text" v-model="editedPlant.image" style="width:90%;"/>
+        <input v-if="editMode"  type="text" v-model="editedPlant.image" style="width:90%;"/>
         <center><editable-input :editMode="editMode" type="text" v-model="editedPlant.name"/></center>
         <ul>
             <!-- <li>Nom vernaculaire: <editable-input :editMode="editMode" type="text" :text="editedPlant.commonName"/></li> -->
@@ -125,7 +125,7 @@ center {
         <div class="options">
         <a v-if="!editMode" v-on:click="edit" :href="'#'+plant.name">Edit</a>
         <a v-if="editMode" v-on:click="save" :href="'#'+plant.name">Save</a>
-        <a v-on:click="expand" :href="'#'+plant.name">Expand</a>
+        <a v-on:click="toggleExpand" :href="'#'+plant.name">Expand</a>
         </div>
     </div></div>
 </template>
@@ -176,6 +176,7 @@ export default {
         return {
             editedPlant: JSON.parse(JSON.stringify(this.plant)),
             editMode: false,
+            expand: false
             // fieldOptions: {
             //     type: ['Herbacée', 'Ligneuse'],
             //     lifetime: ['Pérenne', 'Bisannuelle', 'Annuelle'],
@@ -204,8 +205,8 @@ export default {
             console.log('PlantEditor Emit: submit -> ' + this.editedPlant.name)
             this.$emit('submit', this.editedPlant)
         },
-        expand() {
-
+        toggleExpand() {
+            this.expand = !this.expand
         }
     }
 }
