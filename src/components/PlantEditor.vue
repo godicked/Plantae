@@ -87,6 +87,7 @@ center {
     color: black;
     font-size: 100%;
     text-align: center;
+    margin: 50px;
 }
 </style>
 
@@ -124,6 +125,7 @@ center {
         <div class="options">
         <a v-if="!editMode" v-on:click="edit" :href="'#'+plant.name">Edit</a>
         <a v-if="editMode" v-on:click="save" :href="'#'+plant.name">Save</a>
+        <a v-on:click="expand" :href="'#'+plant.name">Expand</a>
         </div>
     </div></div>
 </template>
@@ -201,6 +203,9 @@ export default {
             this.editMode = false
             console.log('PlantEditor Emit: submit -> ' + this.editedPlant.name)
             this.$emit('submit', this.editedPlant)
+        },
+        expand() {
+
         }
     }
 }

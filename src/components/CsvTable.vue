@@ -26,8 +26,8 @@ td{
             </tr>
 
             <slot v-for="(plant, idx) in sortedTable">
-            <month-row :rowspan="idx === selectedPlant ? 2:1" :on-click="() => selectPlant(idx)" :label="plant.name" :default-color="idx === selectedPlant ? '#edbd24':'#c69707'" :selected-color="idx === selectedPlant ? '#00b000':'green'" :selected-month="plant.semis"></month-row>
-            <month-row :on-click="() => selectPlant(idx)" v-if="idx === selectedPlant" default-color="#edbd24" selected-color="#904040" :selected-month="plant.recolte"></month-row>
+            <month-row :rowspan="idx === selectedPlant ? 2:1" :on-click="() => selectPlant(idx)" :label="plant.name" :default-color="idx === selectedPlant ? '#edbd24':'#c69707'" :selected-color="idx === selectedPlant ? '#00b000':'green'" :selected-month="plant.semis" :offset="firstMonth"></month-row>
+            <month-row :on-click="() => selectPlant(idx)" v-if="idx === selectedPlant" default-color="#edbd24" selected-color="#904040" :selected-month="plant.recolte" :offset="firstMonth"></month-row>
             </slot>
         </table>
     </div>
