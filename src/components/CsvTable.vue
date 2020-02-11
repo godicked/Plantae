@@ -4,11 +4,14 @@
     position:relative;
     left: 200px;
     /* border-spacing: 2px; */
-    background-color: rgb(224, 216, 176);
+    background-color: rgb(212, 203, 156);
     /* border-collapse: collapse; */
 }
+tr {
+    background-color: rgb(243, 241, 230);
+}
 td{
-    background-color: white;
+    /* background-color: white; */
     cursor:pointer;
     -webkit-user-select: none; /* Safari */        
     -moz-user-select: none; /* Firefox */
