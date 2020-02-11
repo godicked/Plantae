@@ -1,4 +1,4 @@
-<style>
+<style scoped>
 .table
 {
     position:relative;
@@ -9,6 +9,11 @@
 }
 td{
     background-color: white;
+    cursor:pointer;
+    -webkit-user-select: none; /* Safari */        
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
 }
 </style>
 
@@ -35,13 +40,13 @@ td{
 </template>
 
 <script>
-import VueCsvImport from 'vue-csv-import'
+// import VueCsvImport from 'vue-csv-import'
 import MonthRow from './MonthRow'
 
 export default {
     name: 'CsvTable',
     components: {
-        VueCsvImport,
+        // VueCsvImport,
         MonthRow
     },
     props: {
