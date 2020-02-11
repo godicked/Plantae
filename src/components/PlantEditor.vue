@@ -133,7 +133,7 @@ form {
     width: 139px;
     height: 100%;
     text-align: center;
-
+    line-height: 30px;
     -webkit-user-select: none; /* Safari */        
     -moz-user-select: none; /* Firefox */
     -ms-user-select: none; /* IE10+/Edge */
