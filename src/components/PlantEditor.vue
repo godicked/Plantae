@@ -1,15 +1,4 @@
 <style scooped>
-.plant-editor
-{
-    display: inline-block;
-    position:relative;
-    /* border-spacing: 2px; */
-    background-color: rgb(224, 216, 176);
-    /* border-collapse: collapse; */
-    margin: 20px;
-    padding: 0px;
-    border-radius: 2%;
-}
 
 .plant-image {
     position: relative;
@@ -45,13 +34,7 @@ img {
     height: 100%;
     margin: 0 auto;
 } 
-ul {
-    list-style: none;
-    padding: 0
-}
-form {
-    text-align: center;
-}
+
 .plant-name {
     position: relative;
     font-size: 20px;
@@ -78,14 +61,14 @@ form {
     cursor: default;
 }
 
-.read-mode {
+.reduce-mode {
     display: inline-block;
     position: relative;
     padding: 3px;
     padding-top: 5px;
     width: 280px;
 }
-.edit-mode {
+.expand-mode {
     position: relative;
     display: inline-block;
 
@@ -101,9 +84,10 @@ form {
     height: 100%;
     background-color: rgb(224, 216, 176);
     border-radius: 15px;
+    overflow: hidden;
 }
 
-.reduced-mode-container {
+.reduce-mode-container {
     background-color: rgb(224, 216, 176);
     width: 100%;
     height: 100%;
@@ -112,9 +96,7 @@ form {
     padding-top: 5px;
 }
 
-
-
-.options {
+.options-reduce {
     position: relative;
     width: 280px;
     height: 30px;
@@ -123,7 +105,43 @@ form {
     overflow: hidden;
 }
 
-.options a{
+.options-expand {
+    position:absolute;
+    width: 100%;
+    height: 30px;
+    bottom: 0px;
+    margin: 0;
+    /* margin-top: 10px; */
+    overflow: hidden;
+}
+
+.simple-boutton-expand{
+    display: inline-block;
+    text-decoration: none;
+    color:inherit;
+    background-color: rgb(214, 203, 149);
+    font-size: 20px;
+    /* text-align: center; */
+    width: 49.75%;
+    height: 100%;
+    text-align: center;
+    line-height: 30px;
+    -webkit-user-select: none; /* Safari */        
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
+}
+
+.simple-boutton-expand+.simple-boutton-expand{
+    margin-left: 0.5%;
+}
+
+
+.simple-boutton-reduce+.simple-boutton-reduce {
+    margin-left: 2px;
+}
+
+.simple-boutton-reduce {
     display: inline-block;
     text-decoration: none;
     color:inherit;
@@ -140,54 +158,32 @@ form {
     user-select: none; /* Standard */
 }
 
-.options a:hover{
-    background-color: rgb(241, 239, 223);
-}
-
-.options a+a {
-    margin-left: 2px;
-}
-
 
 </style>
 
 
 <template>
-    <div :id="plant.name" :class="expand? 'edit-mode':'read-mode'"><div :class="expand? 'expand-mode-container':'reduced-mode-container'">
+    <div :id="plant.name" :class="expand? 'expand-mode':'reduce-mode'"><div :class="expand? 'expand-mode-container':'reduce-mode-container'">
+        
         <div class="plant-image">
             <img :src="editedPlant.image"/>
             <input v-if="editMode"  type="text" v-model="editedPlant.image" placeholder="image url"/>
         </div>
         
         <div class="plant-name"><editable-input :editMode="editMode" type="text" v-model="editedPlant.name"/></div>
-        <!-- <ul> -->
-            <!-- <li>Nom vernaculaire: <editable-input :editMode="editMode" type="text" :text="editedPlant.commonName"/></li> -->
-            <!-- <li>Famille: <editable-input type="text" v-bind:text="fields.family"/></li>
-            <li>Type: <editable-select v-bind:text="fields.type" v-bind:options="fieldOptions.type"/></li>
-            <li>Vie: <editable-select v-bind:text="fields.lifetime" v-bind:options="fieldOptions.lifetime"/></li> -->
-            <!-- <li>Taille: [<editable-input type="text" v-bind:text="fields.size[0]"/>;<editable-input type="text" v-bind:text="fields.size[1]"/>]</li> -->
-            <!-- <li>Diametre: <editable-input type="text" v-bind:text="fields.diameter" /></li>
-            <li>Feuillage: <editable-select v-bind:text="fields.lifetime" v-bind:options="fieldOptions.leaf"/></li>
-            <li>Rusticité: <editable-input type="text" v-bind:text="fields.coldResistance" /></li>
-            <li>Utilité:</li>
-            <li>Commestible: {{ fields.use.comestibles.join(',') }}</li>
-            <li>Ressources: {{ fields.use.resources.join(',') }}</li>
-            <li>Temperature semis: {{fields.seedlingTemp}}</li> -->
-            <!-- <li>Dates de semis: {{plant.semis.join(',')}}</li>
-            <li>Dates de recolte: {{plant.recolte.join(',')}}</li> -->
-            <!-- <li>Exposition soleil: (100, 50, 20, 0)</li>
-            <li>Tolerance a l'ombre: (0, 50, 80, 100)</li>
-            <li>Fertilité: (AF, PAF, AS, MF)</li>
-            <li>Couleur des fleurs: </li> -->
-        <!-- </ul> -->
 
         <editable-calender :editMode="editMode" label="Semis" v-model="editedPlant.semis" default-color="#c69707" selected-color="green"></editable-calender>
         <editable-calender :editMode="editMode" label="Recoltes" v-model="editedPlant.recolte" default-color="#c69707" selected-color="#904040"></editable-calender>
-        <div class="options">
-        <a v-if="!editMode" v-on:click.prevent="edit" href="#">Edit</a>
-        <a v-if="editMode" v-on:click.prevent="save">Save</a>
-        <a v-on:click="toggleExpand" :href="'#'+plant.name">Expand</a>
+        
+        <div :class="expand?'options-expand':'options-reduce'">
+            <simple-boutton hover-color="rgb(248, 242, 214)" :class="bouttonClass" v-if="!editMode" v-on:click.prevent="edit" href="#">Edit</simple-boutton>
+            <simple-boutton hover-color="rgb(248, 242, 214)" :class="bouttonClass" v-if="editMode" v-on:click.prevent="save" href="#">Save</simple-boutton>
+            <!-- <a v-on:click="toggleExpand" :href="'#'+plant.name">Expand</a> -->
+            <simple-boutton hover-color="rgb(248, 242, 214)" :class="bouttonClass" v-on:click="toggleExpand" :href="'#'+plant.name">Expand</simple-boutton>
         </div>
+
+        
+        <!-- <simple-boutton @click="toggleExpand" style="height:40px;background-color:yellow;">TEST</simple-boutton> -->
     </div></div>
 </template>
 
@@ -197,41 +193,19 @@ form {
 import EditableInput from './EditableInput.vue'
 // import EditableSelect from './EditableSelect.vue'
 import EditableCalender from './EditableCalender.vue'
+import SimpleBoutton from './SimpleButton.vue'
 
 export default {
     name: 'PlantEditor',
     components: {
     EditableInput,
     // EditableSelect,
-    EditableCalender
+    EditableCalender,
+    SimpleBoutton
     },
     props: {
         plant: {
-            type: Object,
-            default: function(){return {
-                name: 'Solanum lycopersicum',
-                commonNames: ['Tomate'],
-                image: 'https://upload.wikimedia.org/wikipedia/commons/f/f3/Tomatoes-on-the-bush.jpg',
-                // family: 'Solanaceae',
-                // type: 'Herbacé',
-                // lifetime: 'Pérenne',
-                // size: [0, 1],
-                // diameter: 0,
-                // leaf: 'Caduc',
-                // coldResistance: 12,
-                // use: {
-                //     comestibles: ['Fruit'],
-                //     resources: []
-                // },
-                // seedlingTemp: 15,
-                seedlingDates: ['mars', 'avril', 'mai'],
-                harvestDates: ['juillet', 'aout', 'septembre'],
-                // sunExposition: 100,
-                // shadeTolerance: 0,
-                // fertility: 'AF',
-                // flowerColor: 'jaune'
-            }
-        }
+            type: Object
         }
     },
     data: function() {
@@ -239,15 +213,6 @@ export default {
             editedPlant: JSON.parse(JSON.stringify(this.plant)),
             editMode: false,
             expand: false
-            // fieldOptions: {
-            //     type: ['Herbacée', 'Ligneuse'],
-            //     lifetime: ['Pérenne', 'Bisannuelle', 'Annuelle'],
-            //     leaf: ['Caduc', 'Semi-persistant', 'Persistant'],
-            //     dates: ['janvier', 'fevrier', 'mars', 'avril', 'mai', 'juin', 'juillet', 'aout', 'septembre', 'octobre', 'novembre', 'decembre'],
-            //     sunExpositions: [100, 50, 20, 0],
-            //     shadeTolerance: [0, 50, 80, 100],
-            //     fertility: ['AF', 'PAF', 'AS', 'M/F']
-            // }
         }
     },
     watch: {
@@ -269,6 +234,12 @@ export default {
         },
         toggleExpand() {
             this.expand = !this.expand
+            window.scrollBy(0, 1); // simple fix for boutton hover
+        }
+    },
+    computed: {
+        bouttonClass() {
+            return this.expand? 'simple-boutton-expand':'simple-boutton-reduce'
         }
     }
 }
