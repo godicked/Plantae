@@ -2,7 +2,7 @@
   <div id="app">
     <main-menu :options="['Plantes', 'Semis', 'Save To Local', 'Load LocalStorage']" :on-click="selectMenu" :selected="selected"></main-menu>
     <csv-table v-if="selected === 'Semis'" :table="table"></csv-table>
-    <div style="position:relative; left: 200px; max-width: 80%;" v-if="selected === 'Plantes' && table !== undefined">
+    <div style="position:absolute; left: 200px; right: 0;text-align:center;" v-if="selected === 'Plantes' && table !== undefined">
       <plant-editor v-for="(plant, idx) in table" :key="idx" :plant="plant" v-on:submit="(edited) => {table[idx] = edited; saveToDatabase()}"></plant-editor>
     </div>
   </div>

@@ -1,5 +1,5 @@
-<style>
-.container {
+<style scooped>
+.boutton-container {
     position:relative;
     display:table;
     width:100%;
@@ -23,7 +23,7 @@ a{
 
 <template>
     <div>
-    <div class="container">
+    <div class="boutton-container">
         <a :href="href" class="boutton" @click="$emit('click', $event)" @mouseout="hover=false" @mouseover="hover=true" :style="{backgroundColor: hover ? hoverColor:'inherit'}">
             <slot></slot>
         </a>
