@@ -96,6 +96,7 @@ li {
     white-space: nowrap;
     top:430px;
     bottom:0px;
+    overflow-x:hidden;
 }
 li ul {
     position: relative;
