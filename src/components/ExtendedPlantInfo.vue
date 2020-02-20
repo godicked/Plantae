@@ -157,7 +157,7 @@ li ul {
     padding-right: 5px;
     border: none;
     height: 30px;
-    width: 242px;
+    width: 222px;
     margin-left: -5px;
     font-size: inherit;
     color:inherit;
@@ -177,7 +177,7 @@ li ul {
     margin: 0;
     padding:0;
     top: 4px;
-    right: 8px;
+    right: 28px;
     text-align: center;
     font-size: 24px;
     /* background-color:yellow; */
