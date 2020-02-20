@@ -84,6 +84,11 @@ img {
     
 }
 
+::-webkit-scrollbar {
+    width: 0px;  /* Remove scrollbar space */
+    background: transparent;  /* Optional: just make scrollbar invisible */
+}
+
 li {
     /* margin-top: -8px; */
     position: absolute;
@@ -158,7 +163,7 @@ li ul {
     padding-right: 5px;
     border: none;
     height: 30px;
-    width: 222px;
+    width: 242px;
     margin-left: -5px;
     font-size: inherit;
     color:inherit;
@@ -178,7 +183,7 @@ li ul {
     margin: 0;
     padding:0;
     top: 4px;
-    right: 28px;
+    right: 8px;
     text-align: center;
     font-size: 24px;
     /* background-color:yellow; */
