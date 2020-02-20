@@ -158,11 +158,12 @@ li ul {
     border: none;
     height: 30px;
     width: 242px;
+    margin-left: -5px;
     font-size: inherit;
     color:inherit;
     text-align: left;
     font-family: inherit;
-    margin-top: 5px;
+    /* margin-top: 5px; */
     background-color: rgb(252, 251, 244);
     border-radius: 15px;
 
@@ -211,13 +212,13 @@ li ul {
             </div>
             
             <div class="plant-name"><editable-input :editMode="editMode" type="text" v-model="plant.name"/></div>
-            <div class="plant-name"><editable-input :editMode="editMode" type="text" v-model="tmp.sciName"/></div>
+            <div class="plant-name"><editable-input :editMode="editMode" type="text" v-model="plant.sciName"/></div>
 
             <hr>
-            <p>Variété(s)</p>
+            <center>Variété(s)</center>
             <!-- <hr> -->
             <li>
-                <ul v-for="(variete, idx) in tmp.var" :key="idx">
+                <ul v-for="(variete, idx) in plant.cultivar" :key="idx">
                     <div class="variete">
                         <editable-input class="variete-name" :editMode="editMode" v-model="variete.name" ></editable-input>
                         <div @click="remVar(idx)" v-if="editMode" class="delete-var"><p>x</p></div>
@@ -266,10 +267,12 @@ export default {
     }},
     methods: {
         addVar() {
-            this.tmp.var.push({name: 'New cultivar'})
+            // if(this.plant.cultivar === undefined) this.plant.cultivar = []
+            
+            this.plant.cultivar.push({name: 'cultivar'})
         },
         remVar(idx) {
-            this.tmp.var.splice(idx,1)
+            this.plant.cultivar.splice(idx,1)
         }
     }
 }

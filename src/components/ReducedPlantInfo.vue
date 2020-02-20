@@ -40,20 +40,23 @@ img {
     width: 230px;
     height: 50px;
     word-wrap: break-word;
-    margin: 0 auto;
-    padding: 0;
+    margin: 0;
     overflow: hidden;
     text-align: center;
     line-height: 50px;
-    padding: 5px;
+    padding: 0;
 }
 .plant-name input{
+    width: 210px;
+    padding: 0;
     font-size: 20px;
     font-family: inherit;
     color:inherit;
     border:none;
     background-color: rgb(241, 239, 223);
     border-radius: 30px;
+    padding-left: 10px; 
+    padding-right: 10px;
 }
 
 .plant-name span {

@@ -1,11 +1,74 @@
+<style scooped>
+.top-option-panel {
+  margin-top: 20px;
+  position: relative;
+  text-align: left;
+}
+
+.top-option-panel input{
+  display: inline-block;
+  border:none;
+  width: 100%;
+  /* background-color: yellow; */
+  line-height: 40px;
+  padding:0;
+  padding-left: 10px;
+  font-size: 20px;
+  margin:0;
+  color:inherit;
+  font-family: inherit;
+}
+
+.top-option-panel input:focus {
+    outline: none;
+}
+
+.top-option-panel hr{
+margin-top:0;
+}
+
+.main-panel {
+  position:absolute;
+  left: 220px;
+  right: 20px;
+}
+
+.plant-options{
+  display: inline-block;
+  position: absolute;
+  right: 0px;
+  top: 11px;
+}
+
+.plant-options span{
+  cursor:pointer;
+  display: inline-block;
+  margin-left: 10px;
+
+}
+
+</style>
+
 <template>
   <div id="app">
     <main-menu :options="['Plantes', 'Semis', 'Save To Local', 'Load LocalStorage']" :on-click="selectMenu" :selected="selected"></main-menu>
+    
     <csv-table v-if="selected === 'Semis'" :table="table"></csv-table>
-    <div style="position:absolute; left: 200px; right: 0;text-align:center;" v-if="selected === 'Plantes' && table !== undefined">
-      <plant-editor v-for="(plant, idx) in table" :key="idx" :plant="plant" v-on:submit="(edited) => {table[idx] = edited; saveToDatabase()}"></plant-editor>
+    
+    <div class="main-panel" v-if="selected === 'Plantes' && table !== undefined">
+      <div class="top-option-panel">
+        <input type="text" v-model="searchString" placeholder="Search by Name..."/>
+        <div class="plant-options">
+          <span @click="searchString=''">Clear</span>
+          <span @click="addPlant">Add</span>
+          <span>Restore</span>
+        </div>
+        <hr>
+      </div>
+      <plant-editor v-for="(plant, idx) in filteredPlant" :key="plant.name" :plant="plant" @delete="table.splice(idx,1); saveToDatabase()" @submit="(edited) => {table[idx] = edited; saveToDatabase()}"></plant-editor>
     </div>
-  </div>
+    
+  </div><!-- app -->
 </template>
 
 <script>
@@ -28,17 +91,25 @@ export default {
   data() { return {
       selected: 'Plantes',
       table: undefined,
+      searchString: undefined,
       plants: [{name: 'Solanum lycopersicum',commonNames: ['Tomate'],image: 'https://upload.wikimedia.org/wikipedia/commons/f/f3/Tomatoes-on-the-bush.jpg',seedlingDates: ['mars', 'avril', 'mai'],harvestDates: ['juillet', 'aout', 'septembre'],},{name: 'Solanum lycopersicum',commonNames: ['Tomate'],image: 'https://upload.wikimedia.org/wikipedia/commons/f/f3/Tomatoes-on-the-bush.jpg',seedlingDates: ['mars', 'avril', 'mai'],harvestDates: ['juillet', 'aout', 'septembre'],},{name: 'Solanum lycopersicum',commonNames: ['Tomate'],image: 'https://upload.wikimedia.org/wikipedia/commons/f/f3/Tomatoes-on-the-bush.jpg',seedlingDates: ['mars', 'avril', 'mai'],harvestDates: ['juillet', 'aout', 'septembre'],},{name: 'Solanum lycopersicum',commonNames: ['Tomate'],image: 'https://upload.wikimedia.org/wikipedia/commons/f/f3/Tomatoes-on-the-bush.jpg',seedlingDates: ['mars', 'avril', 'mai'],harvestDates: ['juillet', 'aout', 'septembre'],}]
   }},
   methods: {
     saveToDatabase() {
         axios.post('/fill', this.table)
+        console.log(this.table[0].cultivar)
+        this.sortPlants()
     },
     loadFromDatabase() {
         axios.get('/data').then((data) => {
             this.table = data.data
-            this.table.sort((a,b) => { return (a.semis[0]) - (b.semis[0])})
+            this.sortPlants()
 
+            this.table.forEach((p) => {
+                if(p.cultivar === undefined) {
+                    p.cultivar = []
+                }
+            })
         })
     },
     loadFromLocalStorage() {
@@ -64,6 +135,39 @@ export default {
         else {
             this.selected = selected
         }
+    },
+    addPlant() {
+      let name = 'Common Name'
+      if(this.searchString !== undefined && this.searchString !== '') {
+        name = this.searchString
+      }
+
+      this.table.unshift({name:name, semis: [], recolte:[], cultivar: []})
+      this.searchString = ''
+    },
+    sortPlants() {
+        this.table.sort((a,b) => { 
+            let an = a.semis[0]
+            let bn = b.semis[0]
+
+            if(an === undefined) an = -1
+            if(bn === undefined) bn = -1
+
+            let diff = an-bn
+
+            if(diff == 0) {
+                return a.name.toLowerCase().charCodeAt(0) - b.name[0].toLowerCase().charCodeAt(0)
+            }
+            return diff
+        })
+    }
+  },
+  computed: {
+    filteredPlant() {
+      if(this.searchString !== undefined && this.searchString !== '') {
+        return this.table.filter(plant => plant.name.toLowerCase().includes(this.searchString.toLowerCase()))
+      }
+      return this.table
     }
   }
 }

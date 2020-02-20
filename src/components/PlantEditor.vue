@@ -17,7 +17,7 @@
     padding-right: 1%;
     padding-top: 1.5vh;
     padding-bottom: 1.5vh;
-    z-index: 99;
+    z-index: 2;
     /* background-color:green; */
     min-width: 800px;
     min-height: 500px
@@ -110,12 +110,40 @@
     width: 100%;
 }
 
+.delete-button-reduced {
+    position: absolute;
+    top:15px;
+    left: 228px;
+    font-size: 15px;
+    background-color: rgb(252, 86, 86);
+    padding: 3px;
+    border-radius: 8px;
+    color: white;
+    cursor:pointer;
+}
+
+.delete-button-expanded {
+    position: absolute;
+    top:15px;
+    left: 235px;
+    background-color: rgb(252, 86, 86);
+    padding: 3px;
+    border-radius: 8px;
+    color: white;
+    cursor:pointer;
+    z-index: 99;
+}
+
 </style>
 
 
 <template>
     <div :id="plant.name" :class="expand? 'expand-mode':'reduce-mode'">
         <div :class="expand? 'expand-mode-container':'reduce-mode-container'">
+
+            <div v-if="editMode" @click="deletePlant" :class="expand? 'delete-button-expanded':'delete-button-reduced'">
+                Delete
+            </div>
 
             <reduced-plant-info v-if="!expand" :plant="editedPlant" :editMode="editMode"></reduced-plant-info>
             <extended-plant-info class="extended-info" v-if="expand" :plant="editedPlant" :editMode="editMode"></extended-plant-info>
@@ -176,6 +204,9 @@ export default {
         toggleExpand() {
             this.expand = !this.expand
             this.$nextTick(() => this.$el.scrollIntoView(true))
+        },
+        deletePlant() {
+            this.$emit('delete', this.editedPlant)
         }
     },
     computed: {
