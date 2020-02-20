@@ -10,8 +10,9 @@
     vertical-align: middle;
     height: 100%;
     width: 100%;
-    text-align: center;
-    font-size: 20px;
+    text-align: inherit;
+    font-size: inherit;
+    cursor: pointer;
 }
 
 a{

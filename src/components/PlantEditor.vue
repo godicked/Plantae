@@ -67,7 +67,7 @@
     background-color: rgb(214, 203, 149);
     font-size: 20px;
     /* text-align: center; */
-    width: 49.75%;
+    width: 148px;
     height: 100%;
     text-align: center;
     line-height: 30px;
@@ -78,7 +78,7 @@
 }
 
 .simple-boutton-expand+.simple-boutton-expand{
-    margin-left: 0.5%;
+    margin-left: 4px;
 }
 
 
@@ -121,11 +121,11 @@
             <extended-plant-info class="extended-info" v-if="expand" :plant="editedPlant" :editMode="editMode"></extended-plant-info>
 
             <div :class="expand?'options-expand':'options-reduce'">
-                <simple-boutton hover-color="rgb(248, 242, 214)" :class="bouttonClass" v-if="!editMode" v-on:click.prevent="edit" href="#">Edit</simple-boutton>
-                <simple-boutton hover-color="rgb(248, 242, 214)" :class="bouttonClass" v-if="editMode" v-on:click.prevent="save" href="#">Save</simple-boutton>
+                <simple-boutton hover-color="rgb(248, 242, 214)" :class="bouttonClass" v-if="!editMode" v-on:click.prevent="edit" >Edit</simple-boutton>
+                <simple-boutton hover-color="rgb(248, 242, 214)" :class="bouttonClass" v-if="editMode" v-on:click.prevent="save" >Save</simple-boutton>
 
-                <simple-boutton hover-color="rgb(248, 242, 214)" :class="bouttonClass" v-if="!expand" v-on:click="toggleExpand" :href="'#'+plant.name">Expand</simple-boutton>
-                <simple-boutton hover-color="rgb(248, 242, 214)" :class="bouttonClass" v-if="expand" v-on:click="toggleExpand" :href="'#'+plant.name">Reduce</simple-boutton>
+                <simple-boutton hover-color="rgb(248, 242, 214)" :class="bouttonClass" v-if="!expand" v-on:click="toggleExpand" >Expand</simple-boutton>
+                <simple-boutton hover-color="rgb(248, 242, 214)" :class="bouttonClass" v-if="expand" v-on:click="toggleExpand" >Reduce</simple-boutton>
             </div>
 
         </div>
@@ -175,8 +175,7 @@ export default {
         },
         toggleExpand() {
             this.expand = !this.expand
-            window.scroll(0,1)
-            window.scroll(0,-1)
+            this.$nextTick(() => this.$el.scrollIntoView(true))
         }
     },
     computed: {

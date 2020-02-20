@@ -7,10 +7,10 @@ input {
 </style>
 
 <template>
-<span>
+<div>
     <span v-if="editMode == false">{{ value }}</span>
     <input v-if="editMode" :type="type" :value="value" :style="{fontSize: fontSize}" v-on:input="update($event.target.value)">
-</span>
+</div>
 </template>
 
 <script>

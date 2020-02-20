@@ -33,7 +33,8 @@
     ],
     "rules": {
       "no-console": "off",
-      "vue/no-unused-components": "off"
+      "vue/no-unused-components": "off",
+      "vue/require-v-for-key": "off"
     },
     "parserOptions": {
       "parser": "babel-eslint"
