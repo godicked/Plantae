@@ -51,7 +51,7 @@ margin-top:0;
 
 <template>
   <div id="app">
-    <main-menu :options="['Plantes', 'Semis', 'Save To Local', 'Load LocalStorage']" :on-click="selectMenu" :selected="selected"></main-menu>
+    <main-menu :options="['Plantes', 'Semis', 'Save To Local', 'Load LocalStorage', 'Save To DB']" :on-click="selectMenu" :selected="selected"></main-menu>
     
     <csv-table v-if="selected === 'Semis'" :table="table"></csv-table>
     
@@ -65,7 +65,7 @@ margin-top:0;
         </div>
         <hr>
       </div>
-      <plant-editor v-for="(plant, idx) in filteredPlant" :key="plant.name" :plant="plant" @delete="table.splice(idx,1); saveToDatabase()" @submit="(edited) => {table[idx] = edited; saveToDatabase()}"></plant-editor>
+      <plant-editor v-for="(plant, idx) in filteredPlant" :key="plant.name" :plant="plant" @delete="table.splice(idx,1)" @submit="(edited) => {table[idx] = edited; saveToDatabase()}"></plant-editor>
     </div>
     
   </div><!-- app -->
@@ -131,6 +131,9 @@ export default {
         if(selected === 'Save To Local') {
             this.saveToLocalStorage()
             return
+        }
+        if(selected == 'Save To DB') {
+          this.saveToDatabase()
         }
         else {
             this.selected = selected
