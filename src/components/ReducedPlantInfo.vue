@@ -63,6 +63,20 @@ img {
     cursor: default;
 }
 
+.calender {
+    width: 90%;
+    margin: 0 auto;
+}
+.top-option-panel input{
+    width: 130px;
+}
+
+.calenders {
+    /* background-color: yellow; */
+    height: 254px;
+    overflow: scroll;
+}
+
 </style>
 
 <template>
@@ -74,8 +88,10 @@ img {
     
     <div class="plant-name"><editable-input :editMode="editMode" type="text" v-model="plant.name"/></div>
 
-    <editable-calender :editMode="editMode" label="Semis" v-model="plant.semis" default-color="#c69707" selected-color="green"></editable-calender>
-    <editable-calender :editMode="editMode" label="Recoltes" v-model="plant.recolte" default-color="#c69707" selected-color="#904040"></editable-calender>
+    <div class="calenders">
+        <sourced-calender class="calender" :editMode="editMode" label="Semis" v-model="plant.semis" default-color="#c69707" selected-color="#008000"></sourced-calender>
+        <sourced-calender @addSource="scrollToSource($event)" class="calender" :editMode="editMode" label="Recoltes" v-model="plant.recolte" default-color="#c69707" selected-color="#904040"></sourced-calender>
+    </div>
 </div>
     
 </template>
@@ -83,12 +99,14 @@ img {
 <script>
 import EditableCalender from './EditableCalender.vue'
 import EditableInput from './EditableInput.vue'
+import SourcedCalender from './SourcedCalender'
 
 export default {
     name: 'ReducedPlantInfo',
     components: {
         EditableCalender,
-        EditableInput
+        EditableInput,
+        SourcedCalender
     },
     props: {
         editMode: {
@@ -96,6 +114,11 @@ export default {
             default: false
         },
         plant: Object
+    },
+    methods: {
+        scrollToSource(target) {
+            this.$nextTick(() => target.parentElement.scrollTo(0,200))
+        }
     }
 }
 

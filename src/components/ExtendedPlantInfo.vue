@@ -70,9 +70,10 @@ img {
 .left-info {
     position: absolute;
     top: 0;
-    bottom: 5px;
+    bottom: 0;
     width: 300px;
     padding-top: 20px;
+    /* background-color: blue; */
 }
 .center-info {
     position: absolute;
@@ -89,9 +90,9 @@ img {
     background: transparent;  /* Optional: just make scrollbar invisible */
 }
 
-li {
+.variete-list {
     /* margin-top: -8px; */
-    position: absolute;
+    /* position: absolute; */
     /* display: inline-block; */
     list-style: none;
     text-align: left;
@@ -99,11 +100,14 @@ li {
     margin: 0 auto;
     overflow: scroll;
     white-space: nowrap;
-    top:430px;
-    bottom:0px;
+    /* top:430px; */
+    /* bottom:0px; */
     overflow-x:hidden;
+    padding: 0;
+    list-style: none;
 }
-li ul {
+
+.variete-list li{
     position: relative;
     margin:0;
     /* border-radius: 15px; */
@@ -205,6 +209,61 @@ li ul {
     color:rgb(180, 70, 70);
 }
 
+
+.calender-container {
+    position:relative;
+    text-align: center;
+}
+
+.center-info {
+    position: absolute;
+    left: 300px;
+    right: 0px;
+}
+
+.top-info {
+    position: relative;
+    /* background-color: rgb(206, 190, 190); */
+    height: 200px;
+    /* left: 0;
+    right: 0; */
+    /* overflow: hidden; */
+    width: 100%;
+    line-height: 20px;
+    font-size: 16px;
+    color: inherit;
+    font-family: inherit;
+
+}
+
+.description-left {
+    width: 250px;
+    float: left;
+    margin:0;
+    padding: 0;
+    list-style: none;
+    background-color: rgb(115, 206, 41);
+    height: 100%;
+}
+
+.description-right {
+    /* display: inline-block; */
+    list-style: none;
+    padding: 0;
+    margin:0;
+    width: 100%;
+    background-color: violet;
+    height: 100%;
+}
+
+.description-field {
+    /* position: absolute; */
+    flex-grow: 1;
+    overflow: scroll;
+    /* bottom: 10px; */
+    background-color: yellow;
+}
+
 </style>
 
 <template>
@@ -223,23 +282,39 @@ li ul {
             <hr>
             <center>Variété(s)</center>
             <!-- <hr> -->
-            <li>
-                <ul v-for="(variete, idx) in plant.cultivar" :key="idx">
+            <ul class="variete-list">
+                <li v-for="(variete, idx) in plant.cultivar" :key="idx">
                     <div class="variete">
                         <editable-input class="variete-name" :editMode="editMode" v-model="variete.name" ></editable-input>
                         <div @click="remVar(idx)" v-if="editMode" class="delete-var"><p>x</p></div>
                     </div>
-                </ul>
-                <ul v-if="editMode">
+                </li>
+                <li v-if="editMode">
                     <div @click="addVar" class="variete-add">+</div>
-                </ul>
-            </li>
+                </li>
+            </ul>
 
         </div>
 
         <div class="center-info">
-            <editable-calender :editMode="editMode" label="Semis" v-model="plant.semis" default-color="#c69707" selected-color="green"></editable-calender>
-            <editable-calender :editMode="editMode" label="Recoltes" v-model="plant.recolte" default-color="#c69707" selected-color="#904040"></editable-calender>
+            <div class="top-info">
+                <ul class="description-left">
+                    <li>Famille: Alliaceae</li>
+                    <li>Ensoleillement: Moyen/Fort</li>
+                    <li>Rendement: Elevé</li>
+                    <li>Qualitée: Bonne</li>
+                </ul>
+
+                <ul class="description-right">
+                    <li>Association: Tomate, Poivron, Carotte, Laitue, Aubergine</li>
+                    <li class="description-field">Description: <br>Le poireau (Allium ampeloprasum var. porrum, anciennement Allium porrum) est une espèce de plante herbacée vivace largement cultivée comme plante potagère pour ses feuilles (pseudo-tiges) consommées comme légumes. Il appartient à la famille des Amaryllidacées (précédemment famille des Liliacées puis des Alliacées). Noms communs : poireau, porreau, poirée, poirette, asperge du pauvre.</li>
+                </ul>
+            </div>
+            
+            <div class="calender-container">
+                <sourced-calender class="calender" :editMode="editMode" label="Semis" v-model="plant.semis" default-color="#c69707" selected-color="#006000"></sourced-calender>
+                <sourced-calender class="calender" :editMode="editMode" label="Recoltes" v-model="plant.recolte" default-color="#c69707" selected-color="#904040"></sourced-calender>
+            </div>
         </div>
     </div>
 </div>
@@ -247,16 +322,18 @@ li ul {
 </template>
 
 <script>
-import EditableCalender from './EditableCalender.vue'
-import EditableInput from './EditableInput.vue'
+import SourcedCalender from './SourcedCalender'
+import EditableInput from './EditableInput'
 import SimpleButton from './SimpleButton'
+// import EditableSelect from './EditableSelect'
 
 export default {
     name: 'ExtendedPlantInfo',
     components: {
-        EditableCalender,
+        SourcedCalender,
         EditableInput,
         SimpleButton
+        // EditableSelect
     },
     props: {
         editMode: {
@@ -266,10 +343,6 @@ export default {
         plant: Object
     },
     data() { return {
-        tmp : {
-            sciName: "allium porrum",
-            var: [{name:'Poireau d\'été jaune gros du Poitou'}, {name:'Poireau Gros Long d\'Ete'}, {name:'Poireau d\' hiver de St. Victor'}]
-        }
     }},
     methods: {
         addVar() {
@@ -280,7 +353,7 @@ export default {
         remVar(idx) {
             this.plant.cultivar.splice(idx,1)
         }
-    }
+    },
 }
 
 </script>

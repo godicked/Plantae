@@ -3,8 +3,7 @@ table {
     table-layout:fixed;
     width: 100%;
 }
-tr {
-}
+
 td {
     position: relative;
     width: 40px !important;
@@ -41,31 +40,37 @@ td div {
 
 
 <template>
-<div style="width: 230px; margin: 0 auto;">
+<div>
+<div>
     <table>
         <tr><th colspan=4>{{label}}</th></tr>
         <tr v-for="row in 3" :key="row">
             <td v-for="month in 4" :key="month"> 
-                    <div class="left" v-on:click="() => toggleMonth((month-1) + (row-1) * 4)" :style="{cursor: editMode?'pointer':'inherit', backgroundColor: value.includes((month-1) + (row-1) * 4) ? selectedColor:defaultColor}"></div>
-                    <div class="right" v-on:click="() => toggleMonth((month-1) + (row-1) * 4 +0.5)" :style="{cursor: editMode?'pointer':'inherit', backgroundColor: value.includes((month-1) + (row-1) * 4 +0.5) ? selectedColor:defaultColor}"></div>
+                    <div class="left" v-on:click="() => toggleMonth((month-1) + (row-1) * 4)" :style="{cursor: editMode?'pointer':'inherit', backgroundColor: color((month-1) + (row-1) * 4)}"></div>
+                    <div class="right" v-on:click="() => toggleMonth((month-1) + (row-1) * 4 +0.5)" :style="{cursor: editMode?'pointer':'inherit', backgroundColor: color((month-1) + (row-1) * 4 +0.5)}"></div>
                     <div class="month">{{monthAsString[(month-1) + (row-1) * 4]}}</div>
             </td>
         </tr>
     </table>
 </div>
+</div>
 </template>
 
 <script>
+
+import EditableSelect from './EditableSelect'
+
  export default {
     name: 'EditableCalender',
+    components: {
+        EditableSelect
+    },
     props: {
         value: Array,
+        weight: Array,
         defaultColor: String,
         selectedColor: String,
-        editMode: {
-            type: Boolean,
-            defaut: false
-        },
+        editMode: Boolean,
         label: String
     },
     data() {return {
@@ -80,9 +85,33 @@ td div {
                 else {
                     this.value.push(month)
                     this.value.sort()
-
                 }
             }
+        },
+        color(month) {
+            let selected = this.value.includes(month)
+            if(!selected) {
+                return this.defaultColor
+            }
+
+            let weight = 1
+            if(this.weight !== undefined) weight = this.weight[month*2]
+
+            // const maxWeight = this.maxWeight
+            // weight = (weight + 1) / 2
+            // weight = weight*weight
+            return this.lerpColor('#e0d8b0', this.selectedColor, weight)
+        },
+        lerpColor(a, b, amount) { 
+            var ah = parseInt(a.replace(/#/g, ''), 16),
+                ar = ah >> 16, ag = ah >> 8 & 0xff, ab = ah & 0xff,
+                bh = parseInt(b.replace(/#/g, ''), 16),
+                br = bh >> 16, bg = bh >> 8 & 0xff, bb = bh & 0xff,
+                rr = ar + amount * (br - ar),
+                rg = ag + amount * (bg - ag),
+                rb = ab + amount * (bb - ab);
+
+            return '#' + ((1 << 24) + (rr << 16) + (rg << 8) + rb | 0).toString(16).slice(1);
         }
     }
 }

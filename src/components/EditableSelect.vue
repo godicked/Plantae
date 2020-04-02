@@ -1,8 +1,8 @@
 <template>
 <span>
-    <span v-if="editMode == false" v-on:click="editMode = true">{{ text }}</span>
-    <select v-if="editMode">
-        <option v-for="option in options" :key="option" v-bind:selected="option == text">{{ option }}</option>
+    <span v-if="editMode === false">{{ selected }}</span>
+    <select v-else v-model="value" v-on:input="$emit('input', Number($event.target.value))">
+        <option v-for="(option, idx) in options" :key="idx" :value="idx">{{option}}</option>
     </select>
 </span>
 </template>
@@ -12,10 +12,15 @@
     name: 'EditableSelect',
     props: {
         options: Array,
-        text: String
+        value: Number,
+        editMode: Boolean
     },
     data() {return {
-        editMode: false
     }},
+    computed: {
+        selected() {
+            return this.options[this.value]
+        }
+    }
 }
 </script>

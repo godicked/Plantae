@@ -22,9 +22,9 @@ td{
 
 <template>
 <div class="table">
-    <!-- <div>
+    <div>
         <vue-csv-import v-model="csv" :map-fields="['name', 'semis', 'recolte']"></vue-csv-import>
-    </div> -->
+    </div>
 
     <div>
         <table v-if="table != undefined">
@@ -43,13 +43,13 @@ td{
 </template>
 
 <script>
-// import VueCsvImport from 'vue-csv-import'
+import VueCsvImport from 'vue-csv-import'
 import MonthRow from './MonthRow'
 
 export default {
     name: 'CsvTable',
     components: {
-        // VueCsvImport,
+        VueCsvImport,
         MonthRow
     },
     props: {
@@ -88,8 +88,19 @@ export default {
                     p.semis = this.clearMonthData(p.semis)
                     p.recolte = this.clearMonthData(p.recolte)
                 }
-                this.table = this.sortBySemis(plants)
-                localStorage.setItem('table', JSON.stringify(this.table))
+                // plants = this.sortBySemis(plants)
+                plants = plants.filter(p1 => !this.table.some(p2 => p2.name == p1.name))
+
+                // console.log(plants)
+                
+                plants.forEach(p => {
+                    p.semis = [{dates: p.semis}]
+                    p.recolte = [{dates: p.recolte}]
+                    console.log(p)
+                    this.table.push(p)
+                })
+
+                // localStorage.setItem('table', JSON.stringify(this.table))
             }
         },
     },

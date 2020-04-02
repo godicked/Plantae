@@ -1,59 +1,26 @@
 <style scooped>
-.top-option-panel {
-  margin-top: 20px;
-  position: relative;
-  text-align: left;
-}
 
-.top-option-panel input{
-  display: inline-block;
-  border:none;
-  width: 100%;
-  /* background-color: yellow; */
-  line-height: 40px;
-  padding:0;
-  padding-left: 10px;
-  font-size: 20px;
-  margin:0;
-  color:inherit;
-  font-family: inherit;
-}
-
-.top-option-panel input:focus {
-    outline: none;
-}
-
-.top-option-panel hr{
-margin-top:0;
-}
 
 .main-panel {
   position:absolute;
   left: 220px;
   right: 20px;
-}
-
-.plant-options{
-  display: inline-block;
-  position: absolute;
-  right: 0px;
-  top: 11px;
-}
-
-.plant-options span{
-  cursor:pointer;
-  display: inline-block;
-  margin-left: 10px;
-
+  bottom: 5px;
+  top: 5px;
 }
 
 </style>
 
 <template>
   <div id="app">
-    <main-menu :options="['Plantes', 'Semis', 'Save To Local', 'Load LocalStorage', 'Save To DB']" :on-click="selectMenu" :selected="selected"></main-menu>
+    <main-menu :options="['Plantes', 'Semis', 'Sources', 'Save To Local', 'Load LocalStorage', 'Save To DB']" :on-click="selectMenu" :selected="selected"></main-menu>
     
     <csv-table v-if="selected === 'Semis'" :table="table"></csv-table>
+
+    <div class="main-panel" v-if="selected === 'Sources'">
+        <source-wizard></source-wizard>
+        <source-list :full="true"></source-list>
+    </div>
     
     <div class="main-panel" v-if="selected === 'Plantes' && table !== undefined">
       <div class="top-option-panel">
@@ -76,15 +43,21 @@ import PlantEditor from './components/PlantEditor.vue'
 import CsvTable from './components/CsvTable.vue'
 import MainMenu from './components/MainMenu.vue'
 import axios from 'axios'
+import SourceList from './components/SourceList.vue'
+import SourceWizard from './components/SourceWizard.vue'
 
 export default {
   name: 'app',
   components: {
     PlantEditor,
     CsvTable,
-    MainMenu
+    MainMenu,
+    SourceList,
+    SourceWizard
   },
   mounted() {
+        this.$store.commit('loadSourceFromDb')
+        
         this.loadFromDatabase()
         document.title = "Plantae"
   },
@@ -96,6 +69,8 @@ export default {
   }},
   methods: {
     saveToDatabase() {
+        // this.sortPlants()
+        // return;
         axios.post('/fill', this.table)
         console.log(this.table[0].cultivar)
         this.sortPlants()
@@ -103,13 +78,16 @@ export default {
     loadFromDatabase() {
         axios.get('/data').then((data) => {
             this.table = data.data
-            this.sortPlants()
 
-            this.table.forEach((p) => {
-                if(p.cultivar === undefined) {
-                    p.cultivar = []
-                }
-            })
+            // this.table.forEach((p) => {
+            //     if(p.cultivar === undefined) {
+            //         p.cultivar = []
+            //     }
+            //     // p.semis = [{dates:p.semis, source: 'None'}, {dates:p.semis, source:'Personal'}]
+            //     p.semis = [{dates:p.semis[0].dates, source: undefined}]
+            // })
+
+            this.sortPlants()
         })
     },
     loadFromLocalStorage() {
@@ -136,6 +114,7 @@ export default {
           this.saveToDatabase()
         }
         else {
+          this.sortPlants()
             this.selected = selected
         }
     },
@@ -149,17 +128,11 @@ export default {
       this.searchString = ''
     },
     sortPlants() {
-        this.table.sort((a,b) => { 
-            let an = a.semis[0]
-            let bn = b.semis[0]
-
-            if(an === undefined) an = -1
-            if(bn === undefined) bn = -1
-
-            let diff = an-bn
-
+        this.table.sort((a, b) => {
+            let diff = a.semis[0].dates[0] - b.semis[0].dates[0]
+            // console.log(diff)
             if(diff == 0) {
-                return a.name.toLowerCase().charCodeAt(0) - b.name[0].toLowerCase().charCodeAt(0)
+                return a.semis[0].dates.length - b.semis[0].dates.length
             }
             return diff
         })

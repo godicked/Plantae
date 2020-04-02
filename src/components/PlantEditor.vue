@@ -17,7 +17,7 @@
     padding-right: 1%;
     padding-top: 1.5vh;
     padding-bottom: 1.5vh;
-    z-index: 2;
+    /* z-index: 2; */
     /* background-color:green; */
     min-width: 800px;
     min-height: 500px
@@ -33,21 +33,26 @@
 }
 
 .reduce-mode-container {
+    position: relative;
     background-color: rgb(224, 216, 176);
     width: 100%;
-    height: 100%;
+    height: 551px;
     border-radius: 15px;
     overflow: hidden;
     padding-top: 5px;
 }
 
 .options-reduce {
-    position: relative;
+    position: absolute;
+    display: inline-block;
     width: 280px;
     height: 30px;
-    margin: 0;
-    margin-top: 10px;
-    overflow: hidden;
+    /* margin: 0; */
+    /* margin-top: 10px; */
+    /* overflow: hidden; */
+    /* padding:0px; */
+    bottom:0px;
+    left:0px;
 }
 
 .options-expand {
@@ -58,6 +63,20 @@
     margin: 0;
     /* margin-top: 10px; */
     overflow: hidden;
+}
+
+.visual-data {
+    position: relative;
+    display: inline-block;
+    height: 515px;
+    overflow: hidden;
+    /* background-color: yellow; */
+}
+
+.visual-data-expanded {
+    position: relative;
+    width: 100%;
+    height: 100%;;
 }
 
 .simple-boutton-expand{
@@ -81,10 +100,27 @@
     margin-left: 4px;
 }
 
+.half-boutton-container-expand+.simple-boutton-expand {
+    margin-left: 4px;
+}
+
+.half-boutton-expand+.half-boutton-expand {
+    margin-left: 4px;
+}
+
 
 .simple-boutton-reduce+.simple-boutton-reduce {
     margin-left: 2px;
 }
+
+.half-boutton-container-reduce+.simple-boutton-reduce {
+    margin-left: 2px;
+}
+
+.half-boutton-reduce+.half-boutton-reduce {
+    margin-left: 2px;
+}
+
 
 .simple-boutton-reduce {
     display: inline-block;
@@ -103,11 +139,56 @@
     user-select: none; /* Standard */
 }
 
+.half-boutton-container-reduce {
+    display: inline-block;
+    width: 139px;
+}
+
+.half-boutton-container-expand {
+    display: inline-block;
+    width: 148px;
+}
+
+.half-boutton-reduce {
+    display: inline-block;
+    text-decoration: none;
+    color:inherit;
+    background-color: rgb(214, 203, 149);
+    font-size: 20px;
+    /* text-align: center; */
+    width: 68px;
+    height: 100%;
+    text-align: center;
+    line-height: 30px;
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
+}
+
+.half-boutton-expand {
+    display: inline-block;
+    text-decoration: none;
+    color:inherit;
+    background-color: rgb(214, 203, 149);
+    font-size: 20px;
+    /* text-align: center; */
+    width: 72px;
+    height: 100%;
+    text-align: center;
+    line-height: 30px;
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
+}
+
 .extended-info {
-    position: absolute;
-    top: 0px;
-    bottom: 30px;
+    /* display: inline-block; */
+    /* bottom: 30px; */
     width: 100%;
+    height: 100%;
+    /* z-index: 2; */
 }
 
 .delete-button-reduced {
@@ -140,22 +221,25 @@
 <template>
     <div :id="plant.name" :class="expand? 'expand-mode':'reduce-mode'">
         <div :class="expand? 'expand-mode-container':'reduce-mode-container'">
+            <div :class="!expand?'visual-data':'visual-data-expanded'">
+                <div v-if="editMode" @click="deletePlant" :class="expand? 'delete-button-expanded':'delete-button-reduced'">
+                    Delete
+                </div>
 
-            <div v-if="editMode" @click="deletePlant" :class="expand? 'delete-button-expanded':'delete-button-reduced'">
-                Delete
+                <reduced-plant-info v-if="!expand" :plant="editedPlant" :editMode="editMode"></reduced-plant-info>
+                <extended-plant-info class="extended-info" v-if="expand" :plant="editedPlant" :editMode="editMode"></extended-plant-info>
             </div>
-
-            <reduced-plant-info v-if="!expand" :plant="editedPlant" :editMode="editMode"></reduced-plant-info>
-            <extended-plant-info class="extended-info" v-if="expand" :plant="editedPlant" :editMode="editMode"></extended-plant-info>
 
             <div :class="expand?'options-expand':'options-reduce'">
-                <simple-boutton hover-color="rgb(248, 242, 214)" :class="bouttonClass" v-if="!editMode" v-on:click.prevent="edit" >Edit</simple-boutton>
-                <simple-boutton hover-color="rgb(248, 242, 214)" :class="bouttonClass" v-if="editMode" v-on:click.prevent="save" >Save</simple-boutton>
-
-                <simple-boutton hover-color="rgb(248, 242, 214)" :class="bouttonClass" v-if="!expand" v-on:click="toggleExpand" >Expand</simple-boutton>
-                <simple-boutton hover-color="rgb(248, 242, 214)" :class="bouttonClass" v-if="expand" v-on:click="toggleExpand" >Reduce</simple-boutton>
+                    <simple-boutton hover-color="rgb(248, 242, 214)" :class="bouttonClass" v-if="!editMode" v-on:click.prevent="edit" >Edit</simple-boutton>
+                    <div :class="halfContainerClass" v-if="editMode">
+                        <simple-boutton hover-color="rgb(248, 242, 214)" :class="halfBouttonClass" v-if="editMode" v-on:click.prevent="save" >Save</simple-boutton>
+                        <simple-boutton hover-color="rgb(248, 242, 214)" :class="halfBouttonClass" v-if="editMode" v-on:click.prevent="cancel" >Cancel</simple-boutton>
+                    </div>
+                    
+                    <simple-boutton hover-color="rgb(248, 242, 214)" :class="bouttonClass" v-if="!expand" v-on:click="toggleExpand" >Expand</simple-boutton>
+                    <simple-boutton hover-color="rgb(248, 242, 214)" :class="bouttonClass" v-if="expand" v-on:click="toggleExpand" >Reduce</simple-boutton>
             </div>
-
         </div>
     </div>
 </template>
@@ -189,7 +273,8 @@ export default {
         plant: {
             deep:true,
             handler(newVal) {
-                this.editedPlant = newVal
+                console.log('update')
+                this.editedPlant = JSON.parse(JSON.stringify(newVal))
             }
         }
     },
@@ -200,6 +285,12 @@ export default {
         save() {
             this.editMode = false
             this.$emit('submit', this.editedPlant)
+            console.log('save')
+        },
+        cancel() {
+            this.editMode = false
+            this.editedPlant = JSON.parse(JSON.stringify(this.plant))
+            console.log('cancel')
         },
         toggleExpand() {
             this.expand = !this.expand
@@ -212,6 +303,12 @@ export default {
     computed: {
         bouttonClass() {
             return this.expand? 'simple-boutton-expand':'simple-boutton-reduce'
+        },
+        halfBouttonClass() {
+            return this.expand? 'half-boutton-expand':'half-boutton-reduce'
+        },
+        halfContainerClass() {
+            return this.expand? 'half-boutton-container-expand':'half-boutton-container-reduce'
         }
     }
 }
