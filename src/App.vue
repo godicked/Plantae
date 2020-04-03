@@ -79,13 +79,21 @@ export default {
         axios.get('/data').then((data) => {
             this.table = data.data
 
-            // this.table.forEach((p) => {
-            //     if(p.cultivar === undefined) {
-            //         p.cultivar = []
-            //     }
-            //     // p.semis = [{dates:p.semis, source: 'None'}, {dates:p.semis, source:'Personal'}]
-            //     p.semis = [{dates:p.semis[0].dates, source: undefined}]
-            // })
+        //     this.table.forEach((p) => {
+
+        //       // let semis = p.semis[0].dates
+        //       // let recolte = p.recolte[0].dates
+
+        //       // let semisAsBool = this.defaultMonthArray()
+        //       // let recolteAsBool = this.defaultMonthArray()
+
+        //       // semis.forEach(s => semisAsBool[s*2] = 2)
+        //       // recolte.forEach(s => recolteAsBool[s*2] = 2)
+
+
+        //         // p.semis = [{dates:semis.slice(0,24)}]
+        //         // p.recolte = [{dates:recolte.map(d => d == 2 ? 1 : 0)}]
+        //     })
 
             this.sortPlants()
         })
@@ -119,23 +127,44 @@ export default {
         }
     },
     addPlant() {
-      let name = 'Common Name'
+      let name = ''
       if(this.searchString !== undefined && this.searchString !== '') {
         name = this.searchString
       }
 
-      this.table.unshift({name:name, semis: [], recolte:[], cultivar: []})
+      this.table.unshift(this.defaultPlant(name))
       this.searchString = ''
     },
     sortPlants() {
         this.table.sort((a, b) => {
-            let diff = a.semis[0].dates[0] - b.semis[0].dates[0]
-            // console.log(diff)
-            if(diff == 0) {
-                return a.semis[0].dates.length - b.semis[0].dates.length
-            }
-            return diff
+          return this.sortDates(a.semis[0].dates, b.semis[0].dates)
         })
+    },
+    sortDates(d1, d2) {
+      let score1 = 0, score2 = 0
+
+      for(let i = 0; i < 24; i++) {
+        score1 += d1[i] * Math.pow(2, 23-i)
+        score2 += d2[i] * Math.pow(2, 23-i)
+      }
+      return score2 - score1
+
+    },
+    defaultPlant(name) {
+      return {
+        name: name !== '' ? name : 'Common Name',
+        sciName: 'Scientific Name',
+        semis: [{dates: this.defaultMonthArray()}],
+        recolte: [{dates: this.defaultMonthArray()}],
+        cultivar: []
+      }
+    },
+    defaultMonthArray() {
+      let arr = []
+      for(let i = 0; i < 24; i++) {
+        arr.push(0)
+      }
+      return arr
     }
   },
   computed: {

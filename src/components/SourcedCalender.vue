@@ -49,7 +49,7 @@
 <template>
 <div>
     <div>
-        <editable-calender @input="$emit('input', $event.target.value)" :weight="weight" :editMode="editMode" :label="label" :value="dates" :default-color="defaultColor" :selected-color="selectedColor"></editable-calender>
+        <editable-calender @input="$emit('input', $event.target.value)" :weight="weight" :editMode="editMode" :label="label" :value="dates" :colors="colors"></editable-calender>
         <div class="source-field" v-if="!addSourceMode">
             <span v-if="editMode">Select </span>Source: 
             <editable-select :editMode="editMode" v-model="dataIdx" :options="dataSources"></editable-select>
@@ -76,12 +76,8 @@ export default {
     },
     props: {
         value: Array, // [{dates, source}]
-        defaultColor: String,
-        selectedColor: String,
-        editMode: {
-            type: Boolean,
-            defaut: false
-        },
+        colors: Array,
+        editMode: Boolean,
         label: String,
     },
     watch: {
@@ -131,7 +127,7 @@ export default {
             let w = []
             // console.log(this.dates)
             for(let i = 0; i < 24; i++) {
-                let count = this.value.filter(d => d.source !== undefined && d.dates.includes(i/2)).length
+                let count = this.value.filter(d => d.source !== undefined && d.dates[i] !== 0).length
                 w.push(count)
             }
             let maxW = 0
@@ -143,12 +139,15 @@ export default {
         },
         computedDates() {
             let computed = []
-            this.value.forEach((data) => {
-                if(data.source === undefined) return
-                computed = computed.concat(data.dates.filter(date => !computed.includes(date)))
-            })
+            let sources = this.value.slice(1, this.value.length)
+            for(let i = 0; i < 24; i++) {
+                computed.push(Math.max(...sources.map(data => data.dates[i])))
+            }
+            // this.value.forEach((data) => {
+            //     if(data.source === undefined) return
+            //     computed = computed.concat(data.dates.filter(date => !computed.includes(date)))
+            // })
 
-            computed.sort()
             return computed
         },
         selectedData() {
@@ -204,7 +203,7 @@ export default {
             }
         },
         addSource(source) {
-            this.value.push({dates:[], source:source})
+            this.value.push({dates:Array(24).fill(0), source:source})
             this.addSourceMode=false
             this.editDataIdx = this.value.length-2
         }

@@ -89,8 +89,8 @@ img {
     <div class="plant-name"><editable-input :editMode="editMode" type="text" v-model="plant.name"/></div>
 
     <div class="calenders">
-        <sourced-calender class="calender" :editMode="editMode" label="Semis" v-model="plant.semis" default-color="#c69707" selected-color="#008000"></sourced-calender>
-        <sourced-calender @addSource="scrollToSource($event)" class="calender" :editMode="editMode" label="Recoltes" v-model="plant.recolte" default-color="#c69707" selected-color="#904040"></sourced-calender>
+        <sourced-calender class="calender" :editMode="editMode" label="Semis" v-model="plant.semis" :colors="['#c69707', '#00b0b0', '#008000']" ></sourced-calender>
+        <sourced-calender @addSource="scrollToSource($event)" class="calender" :editMode="editMode" :colors="['#c69707', '#904040']" label="Recoltes" v-model="plant.recolte" ></sourced-calender>
     </div>
 </div>
     

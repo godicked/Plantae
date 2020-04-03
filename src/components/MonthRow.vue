@@ -1,8 +1,8 @@
 <template>
 <tr>
     <td v-on:click="onClick()" v-if="label != undefined" :rowspan="rowspan" style="max-width: 300px; vertical-align: top; text-overflow: ellipsis; overflow:hidden; white-space: nowrap"><span>{{label}}</span></td>
-    <td v-on:click="onClick()" style="min-width: 35px; position:relative; padding: 0px; height: 25px;" v-for="month in range(0,11.5,0.5)" :key="month"> 
-        <div :style="{backgroundColor: selectedColor, width: '100%', position:'absolute', top:'0px', bottom:'0px'}" v-if="selectedMonth.includes((month + offset)%12)"></div>
+    <td v-on:click="onClick()" style="min-width: 35px; position:relative; padding: 0px; height: 25px;" v-for="month in range(0,23,1)" :key="month"> 
+        <div :style="{backgroundColor: selectedColor, width: '100%', position:'absolute', top:'0px', bottom:'0px'}" v-if="selectedMonth[((month + offset)%24)] !== 0"></div>
         <div :style="{backgroundColor: defaultColor, width: '100%', position:'absolute', top:'0px', bottom:'0px'}" v-else></div>
     </td>
 </tr>
