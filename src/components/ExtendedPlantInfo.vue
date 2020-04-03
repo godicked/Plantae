@@ -312,8 +312,8 @@ img {
             </div>
             
             <div class="calender-container">
-                <sourced-calender class="calender" :editMode="editMode" label="Semis" v-model="plant.semis" :colors="['#c69707', '#000080', '#008000']"></sourced-calender>
-                <sourced-calender class="calender" :editMode="editMode" label="Recoltes" v-model="plant.recolte" :colors="['#c69707', '#000080', '#904040']"></sourced-calender>
+                <sourced-calender class="calender" :editMode="editMode" label="Semis" v-model="plant.semis" :colors="['#c69707', '#00b0b0', '#008000']"></sourced-calender>
+                <sourced-calender class="calender" :editMode="editMode" label="Recoltes" v-model="plant.recolte" :colors="['#c69707', '#904040']"></sourced-calender>
             </div>
         </div>
     </div>
