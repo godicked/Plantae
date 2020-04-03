@@ -56,7 +56,7 @@
             <span v-if="editMode" class="source-option-container"><span class="source-option-plus" @click="addSourceMode = true; $emit('addSource',$el)">+</span><span class="source-option-minus" @click="removeSource">-</span></span>            
         </div>
         <div v-if="editMode && addSourceMode" class="add-source-container">
-            <source-list @clear="addSourceMode=false" @select="addSource"></source-list>
+            <source-list :excludedRanks="alreadySourced" @clear="addSourceMode=false" @select="addSource"></source-list>
         </div>
     </div>
 </div>
@@ -103,10 +103,10 @@ export default {
         },
         dataSources() {
             if(this.editMode) {
-                return this.onlyDefault? ['Default'] : this.value.filter(d => d.source !== undefined).map(d => d.source)
+                return this.onlyDefault? ['Default'] : this.value.filter(d => d.source !== undefined).map(d => d.source.name)
             }
             else {
-                return this.value.map(d => d.source === undefined? this.defaultSourceName : d.source)
+                return this.value.map(d => d.source === undefined? this.defaultSourceName : d.source.name)
             }
         },
         dates() {
@@ -179,13 +179,16 @@ export default {
                 let name = ''
                 this.value.filter(d => d.source !== undefined).forEach((d, idx) => {
                     if(idx !== 0) name +=', '
-                    name += d.source
+                    name += d.source.name
                 })
                 return name
             }
         },
         onlyDefault() {
             return this.value.length === 1
+        },
+        alreadySourced() {
+            return this.value.filter(s => s.source !== undefined).map(s => s.source.rank)
         }
 
     },

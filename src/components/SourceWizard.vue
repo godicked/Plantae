@@ -28,6 +28,7 @@ export default {
         addSource() {
             // console.log(this.$store)
             this.$store.commit('addSource', {name: this.name, description: this.description})
+            this.cancel()
         },
         cancel() {
             this.name = ''

@@ -103,7 +103,7 @@ li {
             </div>
 
             <ul :class="full?'source-full':'sources'">
-                <li @click="select(source.name)" v-for="source in sources" :key="source.name">
+                <li @click="select(source)" v-for="source in sources" :key="source.name">
                     <span v-if="full" @click="delSource(source)" class="delete-source-boutton">X</span>  <b>[{{source.rank}}] {{source.name}}</b> <i>{{source.description}}</i>
                 </li>
             </ul>
@@ -121,11 +121,16 @@ export default {
         searchString: ''
     }},
     props: {
-        full: Boolean
+        full: Boolean,
+        excludedRanks: {
+            type: Array,
+            default: () => []
+        }
     },
     computed: {
         sources() {
-            return this.$store.getters.sourcesByName(this.searchString)
+            console.log(this.excludedRanks)
+            return this.$store.getters.sourcesByName(this.searchString).filter(s => !this.excludedRanks.includes(s.rank))
         }
     },
     methods: {
