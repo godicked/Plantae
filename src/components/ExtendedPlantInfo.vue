@@ -372,7 +372,16 @@ export default {
             if(this.safeSelectedVar === undefined) {
                 return this.plant.semis
             }
-            return this.plant.cultivar[this.selectedVar].semis
+            else {
+                let semis = this.plant.cultivar[this.selectedVar].semis
+
+                if(semis.length === 1 && semis[0].name === undefined && !semis[0].dates.some(d => d !== 0) && !this.editMode) {
+                    let inherit = [{dates: this.plant.semis[0].dates, source: {name:'None'}}]
+                    return inherit
+                }
+
+                return semis
+            }
         },
         varieteName() {
             if(this.safeSelectedVar === undefined) {

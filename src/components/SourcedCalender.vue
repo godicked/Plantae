@@ -44,6 +44,10 @@
     font-size: 15px;
 }
 
+.red {
+    color: red;
+}
+
 </style>
 
 <template>
@@ -52,7 +56,7 @@
         <editable-calender @input="$emit('input', $event.target.value)" :weight="weight" :editMode="editMode" :label="label" :value="dates" :colors="colors"></editable-calender>
         <div class="source-field" v-if="!addSourceMode">
             <span v-if="editMode">Select </span>Source: 
-            <editable-select :editMode="editMode" v-model="dataIdx" :options="dataSources"></editable-select>
+            <editable-select :class="dataSources[0] === 'None'?'red':''" :editMode="editMode" v-model="dataIdx" :options="dataSources"></editable-select>
             <span v-if="editMode" class="source-option-container"><span class="source-option-plus" @click="addSourceMode = true; $emit('addSource',$el)">+</span><span class="source-option-minus" @click="removeSource">-</span></span>            
         </div>
         <div v-if="editMode && addSourceMode" class="add-source-container">
