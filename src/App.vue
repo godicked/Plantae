@@ -45,6 +45,7 @@ import MainMenu from './components/MainMenu.vue'
 import axios from 'axios'
 import SourceList from './components/SourceList.vue'
 import SourceWizard from './components/SourceWizard.vue'
+import * as SourceUtils from './utils/Sources'
 
 export default {
   name: 'app',
@@ -138,7 +139,13 @@ export default {
     },
     sortPlants() {
         this.table.sort((a, b) => {
-          return this.sortDates(a.semis[0].dates, b.semis[0].dates)
+          let s1 = SourceUtils.computePlant(a).semis
+          let s2 = SourceUtils.computePlant(b).semis
+
+          s1 = SourceUtils.computeDates(s1).dates
+          s2 = SourceUtils.computeDates(s2).dates
+
+          return this.sortDates(s1,s2)
         })
     },
     sortDates(d1, d2) {
