@@ -123,7 +123,7 @@ export default {
             }
         },
         weight() {
-            if(this.editMode || this.onlyDefault) return undefined
+            // if(this.editMode || this.onlyDefault) return undefined
             return this.computedSource.weight
         },
         computedSource() {
@@ -161,7 +161,7 @@ export default {
             }
         },
         onlyDefault() {
-            return this.value.length === 1
+            return this.value.length === 1 && this.value[0].source === undefined
         },
         alreadyUsedSource() {
             return this.value.filter(s => s.source !== undefined).map(s => s.source.rank)

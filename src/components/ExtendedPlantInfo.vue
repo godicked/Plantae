@@ -9,6 +9,7 @@
     height: 230px;
     overflow: hidden;
     border-radius: 50%;
+    cursor: pointer;
 }
 
 
@@ -282,7 +283,7 @@ img {
     <div class="extended-info-container">
         
         <div class="left-info">
-            <div class="plant-image">
+            <div class="plant-image" @click="selectVariete(undefined)">
                 <img :src="plant.image"/>
                 <input v-if="editMode"  type="text" v-model="plant.image" placeholder="image url"/>
             </div>
@@ -328,7 +329,7 @@ img {
 
             <div class="calender-container">
                 <sourced-calender class="calender" :editMode="editMode" label="Semis" v-model="semisSource" :colors="['#c69707', '#00b0b0', '#008000']"></sourced-calender>
-                <sourced-calender class="calender" :editMode="editMode" label="Recoltes" v-model="plant.recolte" :colors="['#c69707', '#904040']"></sourced-calender>
+                <sourced-calender class="calender" :editMode="editMode" label="Recoltes" v-model="recolteSource" :colors="['#c69707', '#904040']"></sourced-calender>
             </div>
         </div>
     </div>
@@ -341,6 +342,7 @@ import SourcedCalender from './SourcedCalender'
 import EditableInput from './EditableInput'
 import SimpleButton from './SimpleButton'
 import * as Factory from '../utils/Factory'
+import * as SourceUtils from '../utils/Sources'
 // import EditableSelect from './EditableSelect'
 
 export default {
@@ -370,6 +372,9 @@ export default {
         },
         semisSource() {
             if(this.safeSelectedVar === undefined) {
+                if(!this.editMode) {
+                    return SourceUtils.computePlant(this.plant).semis
+                }
                 return this.plant.semis
             }
             else {
@@ -381,6 +386,24 @@ export default {
                 }
 
                 return semis
+            }
+        },
+        recolteSource() {
+            if(this.safeSelectedVar === undefined) {
+                if(!this.editMode) {
+                    return SourceUtils.computePlant(this.plant).recolte
+                }
+                return this.plant.recolte
+            }
+            else {
+                let recolte = this.plant.cultivar[this.selectedVar].recolte
+
+                if(recolte.length === 1 && recolte[0].name === undefined && !recolte[0].dates.some(d => d !== 0) && !this.editMode) {
+                    let inherit = [{dates: this.plant.recolte[0].dates, source: {name:'None'}}]
+                    return inherit
+                }
+
+                return recolte
             }
         },
         varieteName() {

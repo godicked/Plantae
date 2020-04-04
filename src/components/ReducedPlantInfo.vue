@@ -89,8 +89,8 @@ img {
     <div class="plant-name"><editable-input :editMode="editMode" type="text" v-model="plant.name"/></div>
 
     <div class="calenders">
-        <sourced-calender class="calender" :editMode="editMode" label="Semis" v-model="plant.semis" :colors="['#c69707', '#00b0b0', '#008000']" ></sourced-calender>
-        <sourced-calender @addSource="scrollToSource($event)" class="calender" :editMode="editMode" :colors="['#c69707', '#904040']" label="Recoltes" v-model="plant.recolte" ></sourced-calender>
+        <sourced-calender class="calender" :editMode="editMode" label="Semis" v-model="semisSource" :colors="['#c69707', '#00b0b0', '#008000']" ></sourced-calender>
+        <sourced-calender @addSource="scrollToSource($event)" class="calender" :editMode="editMode" v-model="recolteSource" :colors="['#c69707', '#904040']" label="Recoltes" ></sourced-calender>
     </div>
 </div>
     
@@ -100,6 +100,7 @@ img {
 import EditableCalender from './EditableCalender.vue'
 import EditableInput from './EditableInput.vue'
 import SourcedCalender from './SourcedCalender'
+import * as SourceUtils from '../utils/Sources'
 
 export default {
     name: 'ReducedPlantInfo',
@@ -114,6 +115,24 @@ export default {
             default: false
         },
         plant: Object
+    },
+    computed: {
+        semisSource() {
+            if(!this.editMode) {
+                return SourceUtils.computePlant(this.plant).semis
+            }
+            else {
+                return this.plant.semis
+            }
+        },
+        recolteSource() {
+            if(!this.editMode) {
+                return SourceUtils.computePlant(this.plant).recolte
+            }
+            else {
+                return this.plant.recolte
+            }
+        }
     },
     methods: {
         scrollToSource(target) {
