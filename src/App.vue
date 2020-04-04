@@ -79,21 +79,22 @@ export default {
         axios.get('/data').then((data) => {
             this.table = data.data
 
-        //     this.table.forEach((p) => {
+            // this.table.forEach((p) => {
+            //   // let semis = p.semis[0].dates
+            //   // let recolte = p.recolte[0].dates
 
-        //       // let semis = p.semis[0].dates
-        //       // let recolte = p.recolte[0].dates
+            //   // let semisAsBool = this.defaultMonthArray()
+            //   // let recolteAsBool = this.defaultMonthArray()
 
-        //       // let semisAsBool = this.defaultMonthArray()
-        //       // let recolteAsBool = this.defaultMonthArray()
-
-        //       // semis.forEach(s => semisAsBool[s*2] = 2)
-        //       // recolte.forEach(s => recolteAsBool[s*2] = 2)
+            //   // semis.forEach(s => semisAsBool[s*2] = 2)
+            //   // recolte.forEach(s => recolteAsBool[s*2] = 2)
 
 
-        //         // p.semis = [{dates:semis.slice(0,24)}]
-        //         // p.recolte = [{dates:recolte.map(d => d == 2 ? 1 : 0)}]
-        //     })
+            //     // p.semis = [{dates:semis.slice(0,24)}]
+            //     // p.recolte = [{dates:recolte.map(d => d == 2 ? 1 : 0)}]
+
+            //     // p.cultivar.forEach(c => c.semis = [{dates: Array(24).fill(0)}])
+            // })
 
             this.sortPlants()
         })

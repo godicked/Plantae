@@ -47,6 +47,7 @@ img {
     text-align: center;
     /* line-height: 50px; */
     padding: 5px;
+    cursor: pointer;
 }
 .plant-name input{
     font-size: 20px;
@@ -58,7 +59,7 @@ img {
 }
 
 .plant-name span {
-    cursor: default;
+    cursor: inherit;
 }
 
 .extended-info-container {
@@ -179,6 +180,14 @@ img {
 
 }
 
+.select {
+        background-color: rgba(248, 242, 214, 0.65);
+}
+
+.select:hover {
+        background-color: rgba(248, 242, 214, 0.65);
+}
+
 .delete-var {
     position: absolute;
     display: inline-block;
@@ -213,6 +222,8 @@ img {
 .calender-container {
     position:relative;
     text-align: center;
+    width: 50%;
+    margin: 0 auto;
 }
 
 .center-info {
@@ -276,17 +287,17 @@ img {
                 <input v-if="editMode"  type="text" v-model="plant.image" placeholder="image url"/>
             </div>
             
-            <div class="plant-name"><editable-input :editMode="editMode" type="text" v-model="plant.name"/></div>
-            <div class="plant-name"><editable-input :editMode="editMode" type="text" v-model="plant.sciName"/></div>
+            <div class="plant-name" @click="selectVariete(undefined)"><editable-input :editMode="editMode" type="text" v-model="plant.name"/></div>
+            <div class="plant-name" @click="selectVariete(undefined)"><editable-input :editMode="editMode" type="text" v-model="plant.sciName"/></div>
 
             <hr>
             <center>Variété(s)</center>
             <!-- <hr> -->
             <ul class="variete-list">
                 <li v-for="(variete, idx) in plant.cultivar" :key="idx">
-                    <div class="variete">
+                    <div :class="selectedVar === idx ? 'variete select':'variete'" @click="selectVariete(idx)">
                         <editable-input class="variete-name" :editMode="editMode" v-model="variete.name" ></editable-input>
-                        <div @click="remVar(idx)" v-if="editMode" class="delete-var"><p>x</p></div>
+                        <div @click.stop="remVar(idx)" v-if="editMode" class="delete-var"><p>x</p></div>
                     </div>
                 </li>
                 <li v-if="editMode">
@@ -297,7 +308,7 @@ img {
         </div>
 
         <div class="center-info">
-            <div class="top-info">
+            <div class="top-info" v-if="1==0">
                 <ul class="description-left">
                     <li>Famille: Alliaceae</li>
                     <li>Ensoleillement: Moyen/Fort</li>
@@ -311,8 +322,12 @@ img {
                 </ul>
             </div>
             
+            <div style="text-align:center;">
+                <h2>Varieté: <span v-if="selectedVar === undefined">Toutes</span><span v-else>{{varieteName}}</span></h2>
+            </div>
+
             <div class="calender-container">
-                <sourced-calender class="calender" :editMode="editMode" label="Semis" v-model="plant.semis" :colors="['#c69707', '#00b0b0', '#008000']"></sourced-calender>
+                <sourced-calender class="calender" :editMode="editMode" label="Semis" v-model="semisSource" :colors="['#c69707', '#00b0b0', '#008000']"></sourced-calender>
                 <sourced-calender class="calender" :editMode="editMode" label="Recoltes" v-model="plant.recolte" :colors="['#c69707', '#904040']"></sourced-calender>
             </div>
         </div>
@@ -325,6 +340,7 @@ img {
 import SourcedCalender from './SourcedCalender'
 import EditableInput from './EditableInput'
 import SimpleButton from './SimpleButton'
+import * as Factory from '../utils/Factory'
 // import EditableSelect from './EditableSelect'
 
 export default {
@@ -343,15 +359,47 @@ export default {
         plant: Object
     },
     data() { return {
+        selectedVar: undefined
     }},
+    computed: {
+        safeSelectedVar() {
+            if(this.selectedVar !== undefined && this.selectedVar > this.plant.cultivar.length-1) {
+                return undefined
+            }
+            return this.selectedVar
+        },
+        semisSource() {
+            if(this.safeSelectedVar === undefined) {
+                return this.plant.semis
+            }
+            return this.plant.cultivar[this.selectedVar].semis
+        },
+        varieteName() {
+            if(this.safeSelectedVar === undefined) {
+                return 'Toutes'
+            }
+            return this.plant.cultivar[this.selectedVar].name
+        }
+    },
     methods: {
         addVar() {
             // if(this.plant.cultivar === undefined) this.plant.cultivar = []
             
-            this.plant.cultivar.push({name: 'cultivar'})
+            this.plant.cultivar.push(Factory.Cultivar())
+            this.selectedVar = this.plant.cultivar.length-1
         },
         remVar(idx) {
+            this.selectedVar = undefined
             this.plant.cultivar.splice(idx,1)
+        },
+        selectVariete(idx) {
+            console.log('select')
+            if(this.selectedVar !== idx) {
+                this.selectedVar = idx
+            }
+            else if(!this.editMode){
+                this.selectedVar = undefined
+            }
         }
     },
 }
