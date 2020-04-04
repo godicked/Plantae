@@ -1,14 +1,16 @@
 export let computePlant = function(plant) {
     let semis = []
     // if(plant.cultivar.length === 0) 
-    semis.push(computeDates(selectDefinedSources(plant.semis)))
-    plant.cultivar.forEach(c => semis.push(computeDates(selectDefinedSources(c.semis))))
+        semis.push(computeDates(selectDefinedSources(plant.semis)))
+    
+        plant.cultivar.forEach(c => semis.push(computeDates(selectDefinedSources(c.semis))))
     // console.log(semis)
 
     let recolte = []
     // if(plant.cultivar.length === 0) 
-    recolte.push(computeDates(selectDefinedSources(plant.recolte)))
-    plant.cultivar.forEach(c => recolte.push(computeDates(selectDefinedSources(c.recolte))))
+        recolte.push(computeDates(selectDefinedSources(plant.recolte)))
+    
+        plant.cultivar.forEach(c => recolte.push(computeDates(selectDefinedSources(c.recolte))))
     return {semis, recolte}
 }
 
