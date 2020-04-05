@@ -1,4 +1,4 @@
-<style scooped>
+<style>
 .source-field {
     text-align: right;
     font-size: 13px;
@@ -53,8 +53,8 @@
 <template>
 <div>
     <div>
-        <editable-calender @input="$emit('input', $event.target.value)" :weight="weight" :editMode="editMode" :label="label" :value="dates" :colors="colors"></editable-calender>
-        <div class="source-field" v-if="!addSourceMode">
+        <editable-calender :hideMonth="hideMonth" :labelPos="labelPos" :rows="rows" :columns="columns" @input="$emit('input', $event.target.value)" :weight="weight" :editMode="editMode" :label="label" :value="dates" :colors="colors"></editable-calender>
+        <div class="source-field" v-if="!addSourceMode && sourceText">
             <span v-if="editMode">Select </span>Source: 
             <editable-select :class="names[0] === 'None'?'red':''" :editMode="editMode" v-model="dataIdx" :options="names"></editable-select>
             <span v-if="editMode" class="source-option-container"><span class="source-option-plus" @click="addSourceMode = true; $emit('addSource',$el)">+</span><span class="source-option-minus" @click="removeSource">-</span></span>            
@@ -83,7 +83,23 @@ export default {
         value: Array, // [{dates, source}]
         colors: Array,
         editMode: Boolean,
+
+        /** Customization */
         label: String,
+        rows: {
+            type: Number,
+            default: 3,
+        },
+        columns: {
+            type: Number,
+            default: 4
+        },
+        sourceText: {
+            type: Boolean,
+            default: true
+        },
+        labelPos: Number,
+        hideMonth: Boolean
     },
     watch: {
         editMode: {

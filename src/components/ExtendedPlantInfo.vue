@@ -1,4 +1,4 @@
-<style scooped>
+<style>
 
 .plant-image {
     position: relative;
@@ -11,7 +11,6 @@
     border-radius: 50%;
     cursor: pointer;
 }
-
 
 .plant-image input {
     position: absolute;

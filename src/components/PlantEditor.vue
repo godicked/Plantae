@@ -1,4 +1,4 @@
-<style scooped>
+<style>
 
 .reduce-mode {
     display: inline-block;

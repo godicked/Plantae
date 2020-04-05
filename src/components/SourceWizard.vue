@@ -1,4 +1,4 @@
-<style scooped>
+<style>
 
 </style>
 

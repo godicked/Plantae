@@ -1,4 +1,4 @@
-<style scooped>
+<style scoped>
 .plant-image {
     position: relative;
     display: block;
@@ -40,7 +40,7 @@ img {
     width: 230px;
     height: 50px;
     word-wrap: break-word;
-    margin: 0;
+    margin: 0 auto;
     overflow: hidden;
     text-align: center;
     line-height: 50px;
@@ -75,6 +75,7 @@ img {
     /* background-color: yellow; */
     height: 254px;
     overflow: scroll;
+    width: 100%;
 }
 
 </style>

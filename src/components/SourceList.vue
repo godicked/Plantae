@@ -1,4 +1,4 @@
-<style scooped>
+<style>
 /* .main-container {
     position: absolute;
     top: 0;

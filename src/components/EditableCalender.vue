@@ -35,6 +35,7 @@ td div {
     -moz-user-select: none; /* Firefox */
     -ms-user-select: none; /* IE10+/Edge */
     user-select: none; /* Standard */
+    color:rgb(65, 65, 65);
 }
 
 th
@@ -49,23 +50,30 @@ th
     top:1px;
     bottom:1px;
 }
+
+.label-left {
+    overflow: hidden; 
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 </style>
 
 
 <template>
 <div>
-<div>
-    <table>
-        <tr><th colspan=4>{{label}} <toggle-button v-if="useToggle" @change="toggleHandler" v-model="toggleState" :width="65" :color="{checked: colors[2], unchecked:colors[1]}" :labels="{checked: 'outside', unchecked: 'inside'}" class="switch"/></th></tr>
-        <tr v-for="row in 3" :key="row">
-            <td v-for="col in 4" :key="col"> 
-                    <div class="left" v-on:click="() => toggleMonth(month(row,col))" :style="{cursor: editMode?'pointer':'inherit', backgroundColor: color(month(row,col))}"></div>
-                    <div class="right" v-on:click="() => toggleMonth(month(row,col) +0.5)" :style="{cursor: editMode?'pointer':'inherit', backgroundColor: color(month(row,col) +0.5)}"></div>
-                    <div class="month">{{monthAsString[month(row,col)]}}</div>
+    <table v-if="rows * columns === 12">
+        <col v-if="labelPos === 3" width="120">
+        <tr v-if="label !== undefined && labelPos === undefined"><th :colspan="columns">{{label}} <toggle-button v-if="useToggle" @change="toggleHandler" v-model="toggleState" :width="65" :color="{checked: colors[2], unchecked:colors[1]}" :labels="{checked: 'outside', unchecked: 'inside'}" class="switch"/></th></tr>
+        <tr v-for="row in rows" :key="row">
+            <td v-if="labelPos === 3 && label !== undefined" class="label-left">{{label}}</td>
+            <td v-for="col in columns" :key="col"> 
+                    <div class="left" @click="() => toggleMonth(month(row,col))" :style="{cursor: editMode?'pointer':'inherit', backgroundColor: color(month(row,col))}"></div>
+                    <div class="right" @click="() => toggleMonth(month(row,col) +0.5)" :style="{cursor: editMode?'pointer':'inherit', backgroundColor: color(month(row,col) +0.5)}"></div>
+                    <div v-if="!hideMonth" class="month">{{monthAsString[month(row,col)]}}</div>
             </td>
         </tr>
     </table>
-</div>
+    <div v-else>rows * columns != 12!!!!!</div>
 </div>
 </template>
 
@@ -85,7 +93,17 @@ import { ToggleButton } from 'vue-js-toggle-button'
         weight: Array,
         colors: Array,
         editMode: Boolean,
-        label: String
+        label: String,
+        rows: {
+            type: Number,
+            default: 3,
+        },
+        columns: {
+            type: Number,
+            default: 4
+        },
+        labelPos: Number,
+        hideMonth: Boolean
     },
     data() {return {
         monthAsString: ['JAN', 'FEV', 'MAR', 'AVR', 'MAI', 'JUN', 'JUI', 'AOU', 'SEP', 'OCT', 'NOV', 'DEC'],
@@ -128,9 +146,10 @@ import { ToggleButton } from 'vue-js-toggle-button'
             if(this.weight !== undefined) weight = this.weight[month*2]
 
             // const maxWeight = this.maxWeight
-            // weight = (weight + 1) / 2
+            // weight = (((weight + 1) / 2) + weight) / 2
+            weight = (weight + 0.20) / 1.20
             // weight = weight*weight
-            return this.lerpColor('#e0d8b0', color, weight)
+            return this.lerpColor(this.colors[0], color, weight)
         },
         lerpColor(a, b, amount) { 
             var ah = parseInt(a.replace(/#/g, ''), 16),
@@ -144,7 +163,7 @@ import { ToggleButton } from 'vue-js-toggle-button'
             return '#' + ((1 << 24) + (rr << 16) + (rg << 8) + rb | 0).toString(16).slice(1);
         },
         month(row, col) {
-            return (col-1) + (row-1) * 4
+            return (col-1) + (row-1) * this.columns
         },
         toggleHandler(event) {
             this.defaultState = event.value ? 2 : 1

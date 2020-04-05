@@ -1,8 +1,9 @@
 <style scoped>
 .table
 {
-    position:relative;
+    position: absolute;
     left: 200px;
+    right: 0;
     /* border-spacing: 2px; */
     background-color: rgb(212, 203, 156);
     /* border-collapse: collapse; */
@@ -18,26 +19,44 @@ td{
     -ms-user-select: none; /* IE10+/Edge */
     user-select: none; /* Standard */
 }
+.calender-container {
+    position: relative;
+    width: 100%;
+}
+.calender {
+    /* position: absolute; */
+    /* left: 0px; */
+    /* width: 100%; */
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.list-container {
+    position: relative;
+    padding-top: 10px;
+}
+.selected {
+    background-color: rgb(230, 223, 189);
+}
 </style>
 
 <template>
 <div class="table">
-    <div>
-        <vue-csv-import v-model="csv" :map-fields="['name', 'semis', 'recolte']"></vue-csv-import>
-    </div>
+    <!-- <div> -->
+        <!-- <vue-csv-import v-model="csv" :map-fields="['name', 'semis', 'recolte']"></vue-csv-import> -->
+    <!-- </div> -->
 
-    <div>
-        <table v-if="table != undefined">
-            <tr>
-                <td>Plante</td>
-                <td v-on:click="monthClick" v-for="(month, idx) in monthAsName" :key="idx" colspan=2 style="text-align:center; background-color: #765707;">{{monthAsName[(idx + firstMonth)%12]}}</td>
-            </tr>
+    <div class="list-container" v-if="table != undefined">
+        <!-- <tr>
+            <td>Plante</td>
+            <td v-on:click="monthClick" v-for="(month, idx) in monthAsName" :key="idx" colspan=2 style="text-align:center; background-color: #765707;">{{monthAsName[(idx + firstMonth)%12]}}</td>
+        </tr> -->
 
-            <slot v-for="(plant, idx) in sortedTable">
-            <month-row :rowspan="idx === selectedPlant ? 2:1" :on-click="() => selectPlant(idx)" :label="plant.name" :default-color="idx === selectedPlant ? '#edbd24':'#c69707'" :selected-color="idx === selectedPlant ? '#00b000':'green'" :selected-month="plant.semis[0].dates" :offset="firstMonth"></month-row>
-            <month-row :on-click="() => selectPlant(idx)" v-if="idx === selectedPlant" default-color="#edbd24" selected-color="#904040" :selected-month="plant.recolte" :offset="firstMonth"></month-row>
-            </slot>
-        </table>
+        <div v-for="(plant, idx) in sortedTable" :key="plant.name" @click="selectPlant(idx)" :class="{selected: idx===selectedPlant, 'calender-container':true}">
+        <!-- <month-row :rowspan="idx === selectedPlant ? 2:1" :on-click="() => selectPlant(idx)" :label="plant.name" :default-color="idx === selectedPlant ? '#edbd24':'#c69707'" :selected-color="idx === selectedPlant ? '#00b000':'green'" :selected-month="plant.semis[0].dates" :offset="firstMonth"></month-row>
+        <month-row :on-click="() => selectPlant(idx)" v-if="idx === selectedPlant" default-color="#edbd24" selected-color="#904040" :selected-month="plant.recolte" :offset="firstMonth"></month-row> -->
+            <sourced-calender :labelPos="3" :label="plant.name" :sourceText="false" :rows="1" :columns="12" class="calender" :value="computedSources[plant.name].semis" :colors="['#c69707', '#00b0b0', '#008000']" ></sourced-calender>
+            <sourced-calender v-if="idx === selectedPlant" :labelPos="3" :label="' '" :sourceText="false" :rows="1" :columns="12" class="calender" :value="computedSources[plant.name].recolte" :colors="['#c69707', '#904040']"></sourced-calender>
+        </div>
     </div>
 </div>
 </template>
@@ -45,12 +64,15 @@ td{
 <script>
 import VueCsvImport from 'vue-csv-import'
 import MonthRow from './MonthRow'
+import * as SourceUtils from '../utils/Sources'
+import SourcedCalender from './SourcedCalender'
 
 export default {
     name: 'CsvTable',
     components: {
         VueCsvImport,
-        MonthRow
+        MonthRow,
+        SourcedCalender
     },
     props: {
         table: {
@@ -75,7 +97,7 @@ export default {
         // html; d'habitude on va plutot utiliser de 0 a 11 pour comparer, ordonner.
         monthAsName: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Aout', 'Séptembre', 'Octobre', 'Novembre', 'Décembre'],
         firstMonth: 0, // first month is the table as number
-        selectedPlant: undefined // selected plant in table
+        selectedPlant: undefined, // selected plant in table,
     }},
     watch: {
         csv: {
@@ -107,10 +129,18 @@ export default {
     computed: {
         sortedTable() {
             return this.sortBySemis(this.table)
+        },
+        computedSources() {
+            let cmp = {}
+            this.table.forEach(plant => {
+                cmp[plant.name] = SourceUtils.computePlant(plant)
+            })
+            return cmp
         }
     },
     methods: {
         selectPlant(idx) {
+            console.log('clickckckc')
             if(this.selectedPlant === idx) {
                 this.selectedPlant = undefined
                 return

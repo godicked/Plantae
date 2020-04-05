@@ -1,4 +1,4 @@
-<style scooped>
+<style>
 .boutton-container {
     position:relative;
     display:table;
