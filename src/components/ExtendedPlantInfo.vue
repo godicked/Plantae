@@ -381,8 +381,9 @@ export default {
                 let semis = this.plant.cultivar[this.selectedVar].semis
 
                 if(semis.length === 1 && semis[0].name === undefined && !semis[0].dates.some(d => d !== 0) && !this.editMode) {
-                    let inherit = [{dates: this.plant.semis[0].dates, source: {name:'None'}}]
-                    return inherit
+                    let cmp = SourceUtils.computePlant(this.plant).semis
+                    cmp.source = {name:'None'}
+                    return cmp
                 }
 
                 return semis
@@ -399,8 +400,9 @@ export default {
                 let recolte = this.plant.cultivar[this.selectedVar].recolte
 
                 if(recolte.length === 1 && recolte[0].name === undefined && !recolte[0].dates.some(d => d !== 0) && !this.editMode) {
-                    let inherit = [{dates: this.plant.recolte[0].dates, source: {name:'None'}}]
-                    return inherit
+                    let cmp = SourceUtils.computePlant(this.plant).recolte
+                    cmp.source = {name:'None'}
+                    return cmp
                 }
 
                 return recolte
