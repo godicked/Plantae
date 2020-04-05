@@ -182,7 +182,13 @@ export default {
             }
         },
         addSource(source) {
-            this.value.push({dates:Array(24).fill(0), source:source})
+            let dates = Array(24).fill(0)
+
+            if(!this.value.some(s => s.source !== undefined)) {
+                dates = this.value[0].dates
+            }
+            
+            this.value.push({dates, source})
             this.addSourceMode=false
             this.editDataIdx = this.value.length-2
         }
