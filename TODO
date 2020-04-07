@@ -1,0 +1,19 @@
+Les infos a ajouter pour les plantes:
+
+moisture: dry, moist, wetland, water [0;3]
+soil: light, medium, heavy [0;2]
+shade: no, semi, full [0;2]
+ph: acid, neutral, basic [0;2]
+hardiness: according to USA zones or other [0;12]
+height: Number
+diameter: Number
+association: [Plante]
+
+Il faut prendre en compte dans le design de la page que toutes les infos ne sont pas 
+toujours disponible pour chaque plante. De plus une plante peut accepter plusieurs option
+par ex. soil: light and medium and heavy.
+
+ca serrai sympas d'avoir le nom de la source d'info representé comme c'est le cas pour 
+les dates de semis. Mais sans avoir l'impression que ca prenne toute la place.
+Pour les varietées/cultivars de plantes la majorité des variable restent identiques mais 
+peuvent potentiellement toutes changer. Comment rendre les changements clair visuelement ?
