@@ -7,6 +7,7 @@ ph: acid, neutral, basic [0;2]
 hardiness: according to USA zones or other [0;12]
 height: Number
 diameter: Number
+spacing: {x,y} // Espacement conseillé entre deux même plante
 association: [Plante]
 
 Il faut prendre en compte dans le design de la page que toutes les infos ne sont pas 
