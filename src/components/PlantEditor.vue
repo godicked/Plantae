@@ -278,16 +278,34 @@ export default {
             }
         }
     },
+    mounted: function() {
+        if(this.plant.new) {
+            this.edit()
+            this.toggleExpand()
+        }
+    },
     methods: {
         edit() {
             this.editMode = true
         },
         save() {
+            if(this.plant.new) {
+                if(this.expand) this.toggleExpand()
+                delete this.editedPlant.new
+            }
+
             this.editMode = false
             this.$emit('submit', this.editedPlant)
             console.log('save')
+            // this.$nextTick(() => this.$el.scrollIntoView(true))
         },
         cancel() {
+
+            if(this.plant.new) {
+                this.deletePlant()
+                return
+            }
+
             this.editMode = false
             this.editedPlant = JSON.parse(JSON.stringify(this.plant))
             console.log('cancel')
