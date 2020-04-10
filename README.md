@@ -1,4 +1,4 @@
-# plantdb-client
+# plantae
 
 ## Project setup
 ```

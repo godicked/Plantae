@@ -25,7 +25,7 @@ a{
 <template>
     <div>
     <div class="boutton-container">
-        <a :href="href" class="boutton" @click="$emit('click', $event)" @mouseout="hover=false" @mouseover="hover=true" :style="{backgroundColor: hover ? hoverColor:'inherit'}">
+        <a :href="href" class="boutton" @click="click" @mouseout="hover=false" @mouseover="hover=true" :style="style">
             <slot></slot>
         </a>
     </div>
@@ -42,11 +42,40 @@ export default {
     props: {
         name: String,
         hoverColor: String,
-        href: String
+        href: String,
+        locked: Boolean
     },
     data() {return {
         hover:false
     }},
+    computed: {
+        style() {
+            let color = 'inherit'
+            let cursor = 'pointer'
+
+            if(this.locked) {
+                color = 'gray'
+                cursor = 'default'
+            }
+            else if(this.hover) {
+                color = this.hoverColor
+            }
+
+            return {
+                backgroundColor: color,
+                cursor: cursor
+            }
+        }
+    },
+    methods: {
+        click() {
+            if(this.locked) {
+                return
+            }
+
+            this.$emit('click', this.$event)
+        }
+    }
 }
 
 </script>

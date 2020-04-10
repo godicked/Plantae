@@ -6,7 +6,7 @@ import axios from 'axios'
 export let getPlants = async function() {
     try {
         let plants = await axios.get('/plant/get')
-        return plants
+        return plants.data
     }
     catch(err) {
         console.log('Could not Load plants from DB')
@@ -17,7 +17,7 @@ export let getPlants = async function() {
 export let addPlant = async function(plant) {
     try {
         let saved = await axios.post('/plant/add', plant)
-        console.log(saved.data)
+        // console.log(saved.data)
         return saved.data
     }
     catch(err) {
@@ -29,8 +29,8 @@ export let addPlant = async function(plant) {
 
 export let updatePlant = async function(plant) {
     try {
-        let saved = await axios.post('/plant/update', plant).data
-        return saved
+        let saved = await axios.post('/plant/update', plant)
+        return saved.data
     }
     catch(err) {
         console.log('Could not update plant in DB')
