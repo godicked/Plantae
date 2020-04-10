@@ -12,15 +12,6 @@ export let sortPlants = function(plants) {
     })
 
     return plants
-    // if(selected) {
-    //     // console.log('selected: ')
-    //     // console.log(selected)
-    //     this.$nextTick(() => {
-    //         let selectedEditor = this.$refs.plant.filter(p => p.$props.plant._id === selected._id)
-    //         console.log(selectedEditor)
-    //         selectedEditor[0].$el.scrollIntoView(true)
-    //     })
-    // }
 }
 
 let sortDates = function(d1, d2) {

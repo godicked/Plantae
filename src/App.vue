@@ -60,6 +60,7 @@ import MainMenu from './components/MainMenu.vue'
 import SourceList from './components/SourceList.vue'
 import SourceWizard from './components/SourceWizard.vue'
 import * as Factory from './utils/Factory'
+import * as SocketApi from './utils/SocketApi'
 
 export default {
     name: 'app',
@@ -73,6 +74,8 @@ export default {
     mounted() {
         this.$store.commit('loadSourceFromDb')
         this.$store.dispatch('loadPlants')
+
+        SocketApi.init(this.$store, this.$snotify)
 
         // this.loadFromDatabase()
         document.title = "Plantae"

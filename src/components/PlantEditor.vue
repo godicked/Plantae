@@ -246,6 +246,7 @@
 import ReducedPlantInfo from './ReducedPlantInfo.vue'
 import ExtendedPlantInfo from './ExtendedPlantInfo.vue'
 import SimpleBoutton from './SimpleButton.vue'
+import * as SocketApi from '../utils/SocketApi'
 
 export default {
     name: 'PlantEditor',
@@ -284,6 +285,10 @@ export default {
     methods: {
         edit() {
             this.editMode = true
+            
+            if(this.plant._id) {
+                SocketApi.lockPlant(this.plant)
+            }
         },
         save() {
             if(this.plant.new) {
@@ -301,6 +306,8 @@ export default {
                 closeOnClick: true,
                 pauseOnHover: true
             });
+
+            SocketApi.unlockPlant(this.plant)
         },
         cancel() {
 
@@ -312,6 +319,8 @@ export default {
             this.editMode = false
             this.editedPlant = JSON.parse(JSON.stringify(this.plant))
             console.log('cancel')
+
+            SocketApi.unlockPlant(this.plant)
         },
         toggleExpand() {
             this.expand = !this.expand
