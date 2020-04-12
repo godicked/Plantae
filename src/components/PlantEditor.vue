@@ -31,7 +31,8 @@
 
 .reduce-mode-container {
     position: relative;
-    background-color: rgb(224, 216, 176);
+    /* background-color: rgb(224, 216, 176); */
+    background-color: rgb(226, 226, 226);
     width: 100%;
     height: 551px;
     border-radius: 15px;
@@ -67,6 +68,7 @@
     display: inline-block;
     height: 515px;
     overflow: hidden;
+    width:100%;
     /* background-color: yellow; */
 }
 
@@ -223,11 +225,12 @@
                     Delete
                 </div>
 
-                <reduced-plant-info v-if="!expand" :plant="editedPlant" :editMode="editMode"></reduced-plant-info>
+                <reduced-info-f v-if="!expand" :plant="editedPlant" :editMode="editMode"></reduced-info-f>
+                <!-- <reduced-plant-info v-if="!expand" :plant="editedPlant" :editMode="editMode"></reduced-plant-info> -->
                 <extended-plant-info class="extended-info" v-if="expand" :plant="editedPlant" :editMode="editMode"></extended-plant-info>
             </div>
 
-            <div :class="expand?'options-expand':'options-reduce'">
+            <div v-if="expand" :class="expand?'options-expand':'options-reduce'">
                     <simple-boutton hover-color="rgb(248, 242, 214)" :locked="plantLocked" :class="bouttonClass" v-if="!editMode" @click="edit" >Edit</simple-boutton>
                     <div :class="halfContainerClass" v-if="editMode">
                         <simple-boutton hover-color="rgb(248, 242, 214)" :locked="plantLocked" :class="halfBouttonClass" v-if="editMode" @click="save" >Save</simple-boutton>
@@ -247,13 +250,15 @@ import ReducedPlantInfo from './ReducedPlantInfo.vue'
 import ExtendedPlantInfo from './ExtendedPlantInfo.vue'
 import SimpleBoutton from './SimpleButton.vue'
 import * as SocketApi from '../utils/SocketApi'
+import ReducedInfoF from './ReducedInfoF'
 
 export default {
     name: 'PlantEditor',
     components: {
     ReducedPlantInfo,
     ExtendedPlantInfo,
-    SimpleBoutton
+    SimpleBoutton,
+    ReducedInfoF
     },
     props: {
         plant: {
