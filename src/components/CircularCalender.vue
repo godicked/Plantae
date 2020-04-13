@@ -70,7 +70,7 @@ svg {
                 </clipPath>
              </defs>
              <image preserveAspectRatio="xMidYMid slice" :width="(circleR - stroke / 2)*2" :height="(circleR - stroke / 2)*2" :x="cx - (circleR - stroke / 2)" :y="cy - (circleR - stroke / 2)" :xlink:href="image" clip-path="url(#myCircle)"/>
-             <circle :cx="cx" :cy="cy" :r="circleR - stroke / 2" fill="none" stroke="rgb(127,149,234)" stroke-width="1"/>
+             <!-- <circle :cx="cx" :cy="cy" :r="circleR - stroke / 2" fill="none" stroke="rgb(127,149,234)" stroke-width="1"/> -->
         </svg>
     </div>
 </template>
