@@ -11,12 +11,9 @@
     position: relative;
     display: inline-block;
 
-    width: 98%;
-    height: 97vh;
-    padding-left: 1%;
-    padding-right: 1%;
-    padding-top: 1.5vh;
-    padding-bottom: 1.5vh;
+    width: 100%;
+    height: 98.5%;
+    padding: 0;
     /* z-index: 2; */
     /* background-color:green; */
     min-width: 800px;
@@ -231,14 +228,14 @@
             </div>
 
             <div :class="expand?'options-expand':'options-reduce'">
-                    <simple-boutton hover-color="rgb(248, 242, 214)" :class="bouttonClass" v-if="!editMode" v-on:click.prevent="edit" >Edit</simple-boutton>
+                    <simple-boutton hover-color="rgb(248, 242, 214)" :locked="plantLocked" :class="bouttonClass" v-if="!editMode" @click="edit" >Edit</simple-boutton>
                     <div :class="halfContainerClass" v-if="editMode">
-                        <simple-boutton hover-color="rgb(248, 242, 214)" :class="halfBouttonClass" v-if="editMode" v-on:click.prevent="save" >Save</simple-boutton>
-                        <simple-boutton hover-color="rgb(248, 242, 214)" :class="halfBouttonClass" v-if="editMode" v-on:click.prevent="cancel" >Cancel</simple-boutton>
+                        <simple-boutton hover-color="rgb(248, 242, 214)" :locked="plantLocked" :class="halfBouttonClass" v-if="editMode" @click="save" >Save</simple-boutton>
+                        <simple-boutton hover-color="rgb(248, 242, 214)" :class="halfBouttonClass" v-if="editMode" @click="cancel" >Cancel</simple-boutton>
                     </div>
                     
-                    <simple-boutton hover-color="rgb(248, 242, 214)" :class="bouttonClass" v-if="!expand" v-on:click="toggleExpand" >Expand</simple-boutton>
-                    <simple-boutton hover-color="rgb(248, 242, 214)" :class="bouttonClass" v-if="expand" v-on:click="toggleExpand" >Reduce</simple-boutton>
+                    <simple-boutton hover-color="rgb(248, 242, 214)" :class="bouttonClass" v-if="!expand" @click="toggleExpand" >Expand</simple-boutton>
+                    <simple-boutton hover-color="rgb(248, 242, 214)" :class="bouttonClass" v-if="expand" @click="toggleExpand" >Reduce</simple-boutton>
             </div>
         </div>
     </div>
@@ -249,6 +246,7 @@
 import ReducedPlantInfo from './ReducedPlantInfo.vue'
 import ExtendedPlantInfo from './ExtendedPlantInfo.vue'
 import SimpleBoutton from './SimpleButton.vue'
+import * as SocketApi from '../utils/SocketApi'
 
 export default {
     name: 'PlantEditor',
@@ -266,7 +264,7 @@ export default {
         return {
             editedPlant: JSON.parse(JSON.stringify(this.plant)),
             editMode: false,
-            expand: false
+            expand: false,
         }
     },
     watch: {
@@ -278,19 +276,51 @@ export default {
             }
         }
     },
+    mounted: function() {
+        if(this.plant.new) {
+            this.edit()
+            this.toggleExpand()
+        }
+    },
     methods: {
         edit() {
             this.editMode = true
+            
+            if(this.plant._id) {
+                SocketApi.lockPlant(this.plant)
+            }
         },
         save() {
+            if(this.plant.new) {
+                if(this.expand) this.toggleExpand()
+                delete this.editedPlant.new
+            }
+
             this.editMode = false
             this.$emit('submit', this.editedPlant)
             console.log('save')
+            // this.$nextTick(() => this.$el.scrollIntoView(true))
+            this.$snotify.success('Saved', '', {
+                timeout: 2000,
+                showProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true
+            });
+
+            SocketApi.unlockPlant(this.plant)
         },
         cancel() {
+
+            if(this.plant.new) {
+                this.deletePlant()
+                return
+            }
+
             this.editMode = false
             this.editedPlant = JSON.parse(JSON.stringify(this.plant))
             console.log('cancel')
+
+            SocketApi.unlockPlant(this.plant)
         },
         toggleExpand() {
             this.expand = !this.expand
@@ -309,6 +339,9 @@ export default {
         },
         halfContainerClass() {
             return this.expand? 'half-boutton-container-expand':'half-boutton-container-reduce'
+        },
+        plantLocked() {
+            return this.plant.locked === true
         }
     }
 }
