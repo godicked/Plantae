@@ -117,7 +117,12 @@ export default {
       }
     },
     deletePlant(plant) {
-      this.$store.dispatch("deletePlant", plant);
+        if(plant.new) {
+            const idxN = this.newPlants.map(p => p.new).indexOf(plant.new);
+            this.newPlants.splice(idxN, 1);
+            return
+        }
+        this.$store.dispatch("deletePlant", plant);
     },
     // loadFromDatabase() {
     //     DB.getPlants().then(data => {
@@ -171,7 +176,7 @@ export default {
       return this.plants;
     },
     plants() {
-      return this.$store.getters.plants().concat(this.newPlants);
+      return this.newPlants.concat(this.$store.getters.plants());
     }
   }
 };

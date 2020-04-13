@@ -60,7 +60,7 @@ svg {
             
             <line v-for="i in nb" :key="i" :x1="pointOnCircle(i-1, 1).x" :y1="pointOnCircle(i-1, 1).y" :x2="pointOnCircle(i-1, -1).x" :y2="pointOnCircle(i-1, -1).y" stroke="rgb(226,226,226)" stroke-width="1"/>
             
-            <text v-for="i in nb" :key="-i" :x="pointOnCircle(i-1+monthTextOffset, 0).x" :y="pointOnCircle(i-1+monthTextOffset, 0).y" fill="white" :style="{fontSize: monthFont}" :transform="transformMonthText">{{monthText[i-1]}}</text>
+            <text v-for="i in nb" :key="-i" :x="pointOnCircle(i-1+monthTextOffset, 0).x" :y="pointOnCircle(i-1+monthTextOffset, 0).y" fill="rgb(226,226,226)" :style="{fontSize: monthFont}" :transform="transformMonthText">{{monthText[i-1]}}</text>
             
             <!-- <path v-for="i in nb" :key="'aa'+i" :d="describeArc(cx,cy, circleR, (i-1)*30, i*30)" stroke="rgb(0,0,0,0)" :stroke-width="stroke" fill="none" @mouseout="$set(hover, i-1,false)" @mouseover="$set(hover, i-1,true)"/> -->
 

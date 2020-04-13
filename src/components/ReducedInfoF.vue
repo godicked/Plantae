@@ -1,109 +1,74 @@
 <style scoped>
+.container {
+    background-color: rgb(226, 226, 226);
+    width: 280px;
+    /* height: 100%; */
+    padding-top: 3px;
+}
 .plant-image {
-  position: relative;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 260px;
-  height: 260px;
-  overflow: hidden;
-  border-radius: 50%;
+    position: relative;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 260px;
+    height: 260px;
+    overflow: hidden;
+    border-radius: 50%;
 }
 
-.plant-image input {
-  position: absolute;
-  top: 105px;
-  left: 48px;
-
-  width: 134px;
-  height: 20px;
-  padding: 0;
-  margin: 0;
-  border: 0;
-  overflow: hidden;
-  font-size: 10px;
-  font-family: inherit;
-  color: inherit;
-  border: none;
-  background-color: rgb(241, 239, 223);
-  border-radius: 15px;
-  text-align: center;
-}
 img {
-  height: 100%;
-  margin: 0 auto;
+    height: 100%;
+    margin: 0 auto;
 }
 
 .plant-name {
-  position: relative;
-  font-size: 20px;
-  width: 230px;
-  height: 50px;
-  word-wrap: break-word;
-  margin: 0 auto;
-  overflow: hidden;
-  text-align: center;
-  line-height: 50px;
-  padding: 0;
-}
-.plant-name input {
-  width: 210px;
-  padding: 0;
-  font-size: 20px;
-  font-family: inherit;
-  color: inherit;
-  border: none;
-  background-color: rgb(241, 239, 223);
-  border-radius: 30px;
-  padding-left: 10px;
-  padding-right: 10px;
+    position: relative;
+    font-size: 20px;
+    width: 230px;
+    height: 50px;
+    word-wrap: break-word;
+    margin: 0 auto;
+    overflow: hidden;
+    text-align: center;
+    line-height: 50px;
+    padding: 0;
 }
 
-.plant-name span {
-  cursor: default;
+.icon-container {
+    width: 260px;
+    /* margin: 10px; */
+    margin-left: 10px;
+    /* margin-bottom: 0; */
+    /* background: yellow; */
+    text-align: center;
+    padding-bottom: 10px;
 }
 
-.calender {
-  width: 90%;
-  margin: 0 auto;
-}
-.top-option-panel input {
-  width: 130px;
-}
-
-.calenders {
-  /* background-color: yellow; */
-  height: 254px;
-  overflow: scroll;
-  width: 100%;
+.info-icon {
+    height: 50px;
+    width: 50px;
+    /* background: white; */
 }
 </style>
 
 <template>
-  <div>
+  <div class="container" @click="$emit('click')">
     <div class="plant-image">
-      <circular-calender
-        style="width:100%; height:100%;"
-        :image="plant.image"
-        :semis="semisSource"
-        :recolte="recolteSource"
-      ></circular-calender>
-      <input
-        v-if="editMode"
-        type="text"
-        v-model="plant.image"
-        placeholder="image url"
-      />
+      <circular-calender style="width:100%; height:100%;" :image="plant.image" :semis="semisSource" :recolte="recolteSource"></circular-calender>
     </div>
 
     <div class="plant-name">
-      <editable-input :editMode="editMode" type="text" v-model="plant.name" />
+      {{plant.name}}
     </div>
 
-    <!-- <div class="calenders">
-        <sourced-calender class="calender" :editMode="editMode" label="Semis" v-model="semisSource" :colors="['#c69707', '#00b0b0', '#008000']" ></sourced-calender>
-        <sourced-calender @addSource="scrollToSource($event)" class="calender" :editMode="editMode" v-model="recolteSource" :colors="['#c69707', '#904040']" label="Recoltes" ></sourced-calender>
-    </div> -->
+    <table class="icon-container">
+        <tr>
+            <td><img src="./../../res/Asset 1.svg" class="info-icon"/></td>
+            <td><img src="./../../res/Asset 2.svg" class="info-icon"/></td>
+            <td><img src="./../../res/Asset 3.svg" class="info-icon"/></td>
+            <td><img src="./../../res/Asset 4.svg" class="info-icon"/></td>
+        </tr>
+    </table>
   </div>
 </template>
 
@@ -115,44 +80,44 @@ import * as SourceUtils from '../utils/Sources';
 import CircularCalender from './CircularCalender';
 
 export default {
-  name: "ReducedInfoF",
-  components: {
-    EditableCalender,
-    EditableInput,
-    SourcedCalender,
-    CircularCalender
-  },
-  props: {
-    editMode: {
-      type: Boolean,
-      default: false
+    name: "ReducedInfoF",
+    components: {
+        EditableCalender,
+        EditableInput,
+        SourcedCalender,
+        CircularCalender
     },
-    plant: Object
-  },
-  computed: {
-    semisSource() {
-      if (!this.editMode) {
-        return SourceUtils.computeDates(
-          SourceUtils.computePlant(this.plant).semis
-        );
-      } else {
-        return this.plant.semis;
-      }
+    props: {
+        editMode: {
+        type: Boolean,
+        default: false
+        },
+        plant: Object
     },
-    recolteSource() {
-      if (!this.editMode) {
-        return SourceUtils.computeDates(
-          SourceUtils.computePlant(this.plant).recolte
-        );
-      } else {
-        return this.plant.recolte;
-      }
+    computed: {
+        semisSource() {
+        if (!this.editMode) {
+            return SourceUtils.computeDates(
+            SourceUtils.computePlant(this.plant).semis
+            );
+        } else {
+            return this.plant.semis;
+        }
+        },
+        recolteSource() {
+        if (!this.editMode) {
+            return SourceUtils.computeDates(
+            SourceUtils.computePlant(this.plant).recolte
+            );
+        } else {
+            return this.plant.recolte;
+        }
+        }
+    },
+    methods: {
+        scrollToSource(target) {
+        this.$nextTick(() => target.parentElement.scrollTo(0, 200));
+        }
     }
-  },
-  methods: {
-    scrollToSource(target) {
-      this.$nextTick(() => target.parentElement.scrollTo(0, 200));
-    }
-  }
 }
 </script>

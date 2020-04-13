@@ -4,8 +4,8 @@
     display: inline-block;
     position: relative;
     padding: 3px;
-    padding-top: 5px;
-    width: 280px;
+    /* padding-top: 5px; */
+    /* width: 280px; */
 }
 .expand-mode {
     position: relative;
@@ -32,12 +32,14 @@
 .reduce-mode-container {
     position: relative;
     /* background-color: rgb(224, 216, 176); */
-    background-color: rgb(226, 226, 226);
+    /* background-color: rgb(226, 226, 226); */
     width: 100%;
-    height: 551px;
+    height: 100%;
+    /* height: 551px; */
     border-radius: 15px;
     overflow: hidden;
-    padding-top: 5px;
+    /* padding-top: 5px; */
+    background: blue;
 }
 
 .options-reduce {
@@ -61,15 +63,6 @@
     margin: 0;
     /* margin-top: 10px; */
     overflow: hidden;
-}
-
-.visual-data {
-    position: relative;
-    display: inline-block;
-    height: 515px;
-    overflow: hidden;
-    width:100%;
-    /* background-color: yellow; */
 }
 
 .visual-data-expanded {
@@ -220,16 +213,13 @@
 <template>
     <div :id="plant.name" :class="expand? 'expand-mode':'reduce-mode'">
         <div :class="expand? 'expand-mode-container':'reduce-mode-container'">
-            <div :class="!expand?'visual-data':'visual-data-expanded'">
+            <div v-if="expand" class="visual-data-expanded">
                 <div v-if="editMode" @click="deletePlant" :class="expand? 'delete-button-expanded':'delete-button-reduced'">
                     Delete
                 </div>
-
-                <reduced-info-f v-if="!expand" :plant="editedPlant" :editMode="editMode"></reduced-info-f>
-                <!-- <reduced-plant-info v-if="!expand" :plant="editedPlant" :editMode="editMode"></reduced-plant-info> -->
-                <extended-plant-info class="extended-info" v-if="expand" :plant="editedPlant" :editMode="editMode"></extended-plant-info>
+                <extended-plant-info class="extended-info" :plant="editedPlant" :editMode="editMode"></extended-plant-info>
             </div>
-
+        
             <div v-if="expand" :class="expand?'options-expand':'options-reduce'">
                     <simple-boutton hover-color="rgb(248, 242, 214)" :locked="plantLocked" :class="bouttonClass" v-if="!editMode" @click="edit" >Edit</simple-boutton>
                     <div :class="halfContainerClass" v-if="editMode">
@@ -238,8 +228,10 @@
                     </div>
                     
                     <simple-boutton hover-color="rgb(248, 242, 214)" :class="bouttonClass" v-if="!expand" @click="toggleExpand" >Expand</simple-boutton>
-                    <simple-boutton hover-color="rgb(248, 242, 214)" :class="bouttonClass" v-if="expand" @click="toggleExpand" >Reduce</simple-boutton>
+                    <simple-boutton hover-color="rgb(248, 242, 214)" :locked="editMode" :class="bouttonClass" v-if="expand" @click="toggleExpand" >Reduce</simple-boutton>
             </div>
+
+            <reduced-info-f v-else @click="toggleExpand" :plant="editedPlant" :editMode="editMode"></reduced-info-f>
         </div>
     </div>
 </template>
@@ -329,6 +321,9 @@ export default {
         },
         toggleExpand() {
             this.expand = !this.expand
+            if(!this.expand && this.editMode) {
+                this.cancel()
+            }
             this.$nextTick(() => this.$el.scrollIntoView(true))
         },
         deletePlant() {
