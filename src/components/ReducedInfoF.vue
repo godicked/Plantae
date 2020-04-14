@@ -13,7 +13,7 @@
     width: 240px;
     height: 240px;
     overflow: hidden;
-    border-radius: 50%;
+    /* border-radius: 50%; */
 }
 
 img {
@@ -68,13 +68,51 @@ img {
 .active-soil {
     opacity: 1;
 }
+
+.temp {
+    position:absolute;
+    display: inline-block;
+    left:20px;
+    height: 35px;
+    width: 5px;
+}
+.low {
+    top:210px;
+}
+
+.high {
+    top:15px;
+}
+
+.size {
+    position:absolute;
+    display: inline-block;
+    right:20px;
+    height: 35px;
+    width: 5px;
+}
+
+.size-width {
+    position:absolute;
+    display: inline-block;
+    right:3px;
+    height: 4px;
+    top: 220px;
+}
+
+
 </style>
 
 <template>
   <div class="container" @click="$emit('click')">
     <div class="plant-image">
-      <circular-calender style="width:100%; height:100%;" :image="plant.image" :semis="semisSource" :recolte="recolteSource"></circular-calender>
+        <circular-calender style="width:100%; height:100%;" :image="plant.image" :semis="semisSource" :recolte="recolteSource"></circular-calender>
     </div>
+
+    <img src="./../../res/Asset 5.png" class="temp low"/>
+    <img src="./../../res/Asset 6.png" class="temp high"/>
+    <img src="./../../res/Asset 8.png" class="size-width"/>
+    <img src="./../../res/Asset 7.png" class="size high"/>
 
     <div class="plant-name">
       {{plant.name}}
