@@ -1,17 +1,17 @@
 <style scoped>
 .container {
     background-color: rgb(226, 226, 226);
-    width: 280px;
+    width: 276px;
     /* height: 100%; */
-    padding-top: 3px;
+    padding-top: 10px;
 }
 .plant-image {
     position: relative;
     display: block;
     margin-left: auto;
     margin-right: auto;
-    width: 260px;
-    height: 260px;
+    width: 240px;
+    height: 240px;
     overflow: hidden;
     border-radius: 50%;
 }
@@ -35,19 +35,38 @@ img {
 }
 
 .icon-container {
-    width: 260px;
+    width: 256px;
     /* margin: 10px; */
     margin-left: 10px;
     /* margin-bottom: 0; */
     /* background: yellow; */
     text-align: center;
-    padding-bottom: 10px;
+    /* padding-bottom: 10px; */
 }
 
 .info-icon {
     height: 50px;
     width: 50px;
     /* background: white; */
+}
+
+.soil-container {
+    margin:0;
+    padding:0;
+    height: 70px;
+}
+
+.info-soil {
+    display: inline-block;
+    width: 92px;
+    margin: 0;
+    padding: 0;
+    height: 70px;
+    opacity: 0.5;
+}
+
+.active-soil {
+    opacity: 1;
 }
 </style>
 
@@ -69,6 +88,12 @@ img {
             <td><img src="./../../res/Asset 4.svg" class="info-icon"/></td>
         </tr>
     </table>
+
+    <div class="soil-container">
+        <img src="./../../res/sable.png" class="info-soil active-soil"/>
+        <img src="./../../res/terr2.png" class="info-soil active-soil"/>
+        <img src="./../../res/argile2.png" class="info-soil"/>
+    </div>
   </div>
 </template>
 
