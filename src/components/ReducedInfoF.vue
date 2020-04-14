@@ -10,8 +10,8 @@
     display: block;
     margin-left: auto;
     margin-right: auto;
-    width: 240px;
-    height: 240px;
+    width: 230px;
+    height: 230px;
     overflow: hidden;
     /* border-radius: 50%; */
 }
@@ -129,8 +129,8 @@ img {
 
     <div class="soil-container">
         <img src="./../../res/sable.png" class="info-soil active-soil"/>
-        <img src="./../../res/terr2.png" class="info-soil active-soil"/>
-        <img src="./../../res/argile2.png" class="info-soil"/>
+        <img src="./../../res/terre.png" class="info-soil active-soil"/>
+        <img src="./../../res/argile.png" class="info-soil"/>
     </div>
   </div>
 </template>
