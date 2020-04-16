@@ -53,7 +53,7 @@ img {
 .soil-container {
     margin:0;
     padding:0;
-    height: 70px;
+    height: 81px;
 }
 
 .info-soil {
@@ -61,10 +61,13 @@ img {
     width: 92px;
     margin: 0;
     padding: 0;
-    height: 70px;
+    /* height: 60px; */
     opacity: 0.5;
 }
 
+.info-soil img {
+    width: 100%;
+}
 .active-soil {
     opacity: 1;
 }
@@ -120,15 +123,15 @@ img {
 
     <table class="icon-container">
         <tr>
-            <td><img src="./../../res/Asset 1.svg" class="info-icon"/></td>
-            <td><img src="./../../res/Asset 2.svg" class="info-icon"/></td>
+            <td><img src="./../../res/moist.svg" class="info-icon"/></td>
+            <td><img src="./../../res/soleil-full.svg" class="info-icon"/></td>
             <td><img src="./../../res/Asset 3.svg" class="info-icon"/></td>
-            <td><img src="./../../res/Asset 4.svg" class="info-icon"/></td>
+            <td><img src="./../../res/ph-neutre.svg" class="info-icon"/></td>
         </tr>
     </table>
 
     <div class="soil-container">
-        <img src="./../../res/sable.png" class="info-soil active-soil"/>
+        <img src="./../../res/sable.svg" class="info-soil active-soil"/>
         <img src="./../../res/terre.png" class="info-soil active-soil"/>
         <img src="./../../res/argile.png" class="info-soil"/>
     </div>
