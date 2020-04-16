@@ -1,4 +1,4 @@
-<style>
+<style scoped>
 /* .main-container {
     position: absolute;
     top: 0;

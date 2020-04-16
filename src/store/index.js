@@ -62,6 +62,7 @@ export default new Vuex.Store({
     actions: {
         async loadPlants(context) {
             let plants = await Db.getPlants()
+            plants.forEach(p => p.family = '')
             context.commit('setPlants', plants)
         },
         async addPlant(context, plant) {
@@ -76,6 +77,7 @@ export default new Vuex.Store({
         },
         async updatePlant(context, plant) {
             try {
+                console.log('store updatePlant')
                 console.log(plant)
                 let p = await Db.updatePlant(plant)
                 console.log(p)

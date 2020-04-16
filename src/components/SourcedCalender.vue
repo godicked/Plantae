@@ -1,4 +1,4 @@
-<style>
+<style scoped>
 .source-field {
     text-align: right;
     font-size: 13px;

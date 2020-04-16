@@ -1,4 +1,4 @@
-<style>
+<style scoped>
 
 .plant-image {
     position: relative;
@@ -78,12 +78,15 @@ img {
 }
 .center-info {
     position: absolute;
-    top: 0;
-    bottom: -30px;
+    top: 0px;
+    bottom: 0px;
     left: 300px;
-    right: 0;
+    right: 0px;
+    /* padding:20px; */
+    padding-left: 20px;
+    padding-right: 20px;
     background-color: rgb(240, 234, 207);
-    
+    /* background: yellow; */
 }
 
 ::-webkit-scrollbar {
@@ -93,19 +96,20 @@ img {
 
 .variete-list {
     /* margin-top: -8px; */
-    /* position: absolute; */
+    position: absolute;
     /* display: inline-block; */
     list-style: none;
     text-align: left;
     width: 300px;
     margin: 0 auto;
-    overflow: scroll;
+    overflow: auto;
     white-space: nowrap;
-    /* top:430px; */
-    /* bottom:0px; */
+    top:430px;
+    bottom:35px;
     overflow-x:hidden;
     padding: 0;
-    list-style: none;
+    padding-right: 5px;
+    
 }
 
 .variete-list li{
@@ -222,59 +226,37 @@ img {
 .calender-container {
     position:relative;
     text-align: center;
-    width: 50%;
+    width: 90%;
     margin: 0 auto;
 }
 
-.center-info {
+.info-container {
     position: absolute;
-    left: 300px;
-    right: 0px;
+    top:60px;
+    bottom:0px;
+    left:20px;
+    right:20px;
+    /* background: yellow; */
+    overflow: auto;
 }
 
-.top-info {
-    position: relative;
-    /* background-color: rgb(206, 190, 190); */
-    height: 200px;
-    /* left: 0;
-    right: 0; */
-    /* overflow: hidden; */
-    width: 100%;
-    line-height: 20px;
-    font-size: 16px;
-    color: inherit;
-    font-family: inherit;
-
-}
-
-.description-left {
-    width: 250px;
-    float: left;
+.section {
+    /* background:green; */
+    display: inline-block;
+    width: 50%;
     margin:0;
-    padding: 0;
-    list-style: none;
-    background-color: rgb(115, 206, 41);
-    height: 100%;
+    padding:0;  
+    /* height: 500px; */
+    vertical-align: top;
 }
 
-.description-right {
-    /* display: inline-block; */
-    list-style: none;
-    padding: 0;
-    margin:0;
+.dates {
     width: 100%;
-    background-color: violet;
-    height: 100%;
 }
 
-.description-field {
-    /* position: absolute; */
-    flex-grow: 1;
-    overflow: scroll;
-    /* bottom: 10px; */
-    background-color: yellow;
+.edit {
+    width: 100%;
 }
-
 </style>
 
 <template>
@@ -308,27 +290,51 @@ img {
         </div>
 
         <div class="center-info">
-            <div class="top-info" v-if="1==0">
-                <ul class="description-left">
-                    <li>Famille: Alliaceae</li>
-                    <li>Ensoleillement: Moyen/Fort</li>
-                    <li>Rendement: Elevé</li>
-                    <li>Qualitée: Bonne</li>
-                </ul>
-
-                <ul class="description-right">
-                    <li>Association: Tomate, Poivron, Carotte, Laitue, Aubergine</li>
-                    <li class="description-field">Description: <br>Le poireau (Allium ampeloprasum var. porrum, anciennement Allium porrum) est une espèce de plante herbacée vivace largement cultivée comme plante potagère pour ses feuilles (pseudo-tiges) consommées comme légumes. Il appartient à la famille des Amaryllidacées (précédemment famille des Liliacées puis des Alliacées). Noms communs : poireau, porreau, poirée, poirette, asperge du pauvre.</li>
-                </ul>
-            </div>
-            
             <div style="text-align:center;">
                 <h2>Varieté: <span v-if="selectedVar === undefined">Toutes</span><span v-else>{{varieteName}}</span></h2>
             </div>
+            <div class="info-container">
+                <div class="section classification" :class="{edit:editMode}">
+                    <h3>Classification</h3>
+                    <table>
+                        <tr><td>Nom:</td><td>{{plant.name}}</td></tr>
+                        <tr><td>Espèce:</td><td>{{plant.species}}</td></tr>
+                        <tr><td>Genre:</td><td>{{plant.genus}}</td></tr>
+                        <tr><td>Famille:</td><td><editable-input type="text" v-model="plant.family" :editMode="editMode"/></td></tr>
+                        <tr><td>Ordre:</td><td>{{plant.order}}</td></tr>
+                    </table>
+                </div>
 
-            <div class="calender-container">
-                <sourced-calender class="calender" :editMode="editMode" label="Semis" v-model="semisSource" :colors="['#c69707', '#00b0b0', '#008000']"></sourced-calender>
-                <sourced-calender class="calender" :editMode="editMode" label="Recoltes" v-model="recolteSource" :colors="['#c69707', '#904040']"></sourced-calender>
+                <div class="section properties" :class="{edit:editMode}">
+                    <h3>Propriétés</h3>
+                    <table>
+                        <tr><td>Cycle:</td><td></td></tr>
+                        <tr><td>Croissance:</td><td></td></tr>
+                        <tr><td>Hateur:</td><td></td></tr>
+                        <tr><td>Largeur:</td><td></td></tr>
+                        <tr><td>Feuillage:</td><td></td></tr>
+                    </table>
+                </div>
+
+                <div class="section requirements" :class="{edit:editMode}">
+                    <h3>Conditions</h3>
+                    <table>
+                        <tr><td>Humidité:</td><td></td></tr>
+                        <tr><td>Secheresse:</td><td></td></tr>
+                        <tr><td>Temperature Min:</td><td></td></tr>
+                        <tr><td>Temperature Max:</td><td></td></tr>
+                        <tr><td>Type(s) de Sol:</td><td></td></tr>
+                        <tr><td>Soleil:</td><td></td></tr>
+                        <tr><td>Ombre:</td><td></td></tr>
+                        <tr><td>Ph:</td><td></td></tr>
+                    </table>
+                </div>
+
+                <div class="section dates" :class="{edit:editMode}">
+                    <h3>Dates</h3>
+                    <sourced-calender :rows="1" :columns="12" class="calender" :editMode="editMode" label="Semis" v-model="semisSource" :colors="['#c69707', '#00b0b0', '#008000']"></sourced-calender>
+                    <sourced-calender :rows="1" :columns="12" class="calender" :editMode="editMode" label="Recoltes" v-model="recolteSource" :colors="['#c69707', '#904040']"></sourced-calender>
+                </div>
             </div>
         </div>
     </div>

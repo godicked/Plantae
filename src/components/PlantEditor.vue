@@ -1,4 +1,4 @@
-<style>
+<style scoped>
 
 .reduce-mode {
     display: inline-block;
@@ -230,7 +230,6 @@
                     <simple-boutton hover-color="rgb(248, 242, 214)" :class="bouttonClass" v-if="!expand" @click="toggleExpand" >Expand</simple-boutton>
                     <simple-boutton hover-color="rgb(248, 242, 214)" :locked="editMode" :class="bouttonClass" v-if="expand" @click="toggleExpand" >Reduce</simple-boutton>
             </div>
-
             <reduced-info-f v-else @click="toggleExpand" :plant="editedPlant" :editMode="editMode"></reduced-info-f>
         </div>
     </div>

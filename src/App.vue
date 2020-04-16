@@ -16,6 +16,46 @@
   /* background-color: yellow; */
   overflow: auto;
 }
+
+.top-option-panel {
+    position: relative;
+    margin-top: 10px;
+    position: relative;
+    text-align: left;
+    margin-right: 10px;
+}
+.top-option-panel input{
+    display: inline-block;
+    border:none;
+    width: 80%;
+    background-color: inherit;
+    line-height: 14px;
+    padding:0;
+    padding-left: 10px;
+    font-size: 14px;
+    margin:0;
+    color:inherit;
+    font-family: inherit;
+    height: 14px;
+}
+
+.top-option-panel input:focus {
+    outline: none;
+}
+.plant-options{
+  display: inline-block;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+}
+
+.plant-options span{
+  cursor:pointer;
+  display: inline-block;
+  margin-left: 10px;
+
+}
+
 </style>
 
 <template>
