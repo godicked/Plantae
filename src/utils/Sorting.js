@@ -2,13 +2,24 @@ import * as SourceUtils from './Sources'
 
 export let sortPlants = function(plants) {
     plants.sort((a, b) => {
-        let s1 = SourceUtils.computePlant(a).semis
-        let s2 = SourceUtils.computePlant(b).semis
+        let i1 = JSON.parse(JSON.stringify(a.sourcedInfos))
+        let i2 = JSON.parse(JSON.stringify(b.sourcedInfos))
 
-        s1 = SourceUtils.computeDates(s1).dates
-        s2 = SourceUtils.computeDates(s2).dates
+        Object.keys(i1).forEach(k => SourceUtils.addMissingInfoFields(i1[k]))
+        Object.keys(i2).forEach(k => SourceUtils.addMissingInfoFields(i2[k]))
 
-        return sortDates(s1,s2)
+        i1 = SourceUtils.computeSourcesToInfos(SourceUtils.filterSourcedInfos(i1))
+        i2 = SourceUtils.computeSourcesToInfos(SourceUtils.filterSourcedInfos(i2))
+        // let s1 = SourceUtils.computePlant(a).semis
+        // let s2 = SourceUtils.computePlant(b).semis
+
+
+        return sortDates(i1.dates.semis.dates, i2.dates.semis.dates)
+
+        // s1 = SourceUtils.computeDates(s1).dates
+        // s2 = SourceUtils.computeDates(s2).dates
+
+        // return sortDates(s1,s2)
     })
 
     return plants

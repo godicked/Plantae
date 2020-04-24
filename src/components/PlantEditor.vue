@@ -242,6 +242,7 @@ import ExtendedPlantInfo from './ExtendedPlantInfo.vue'
 import SimpleBoutton from './SimpleButton.vue'
 import * as SocketApi from '../utils/SocketApi'
 import ReducedInfoF from './ReducedInfoF'
+import * as SourceUtils from '../utils/Sources'
 
 export default {
     name: 'PlantEditor',
@@ -258,16 +259,17 @@ export default {
     },
     data: function() {
         return {
-            editedPlant: JSON.parse(JSON.stringify(this.plant)),
+            editedPlant: undefined,
+            editedSources: undefined,
             editMode: false,
             expand: false,
         }
     },
     watch: {
         plant: {
+            immediate: true,
             deep:true,
             handler(newVal) {
-                console.log('update')
                 this.editedPlant = JSON.parse(JSON.stringify(newVal))
             }
         }
@@ -292,6 +294,8 @@ export default {
                 delete this.editedPlant.new
             }
 
+            SourceUtils.clearPlantBeforeSave(this.editedPlant)
+            console.log(this.editedPlant)
             this.editMode = false
             this.$emit('submit', this.editedPlant)
             console.log('save')

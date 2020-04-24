@@ -162,22 +162,16 @@ export default {
     },
     computed: {
         semisSource() {
-        if (!this.editMode) {
-            return SourceUtils.computeDates(
-            SourceUtils.computePlant(this.plant).semis
-            );
-        } else {
-            return this.plant.semis;
-        }
+            return this.info.dates.semis
         },
         recolteSource() {
-        if (!this.editMode) {
-            return SourceUtils.computeDates(
-            SourceUtils.computePlant(this.plant).recolte
-            );
-        } else {
-            return this.plant.recolte;
-        }
+            return this.info.dates.recolte
+        },
+        info() {
+            return SourceUtils.computeSourcesToInfos(this.filteredSourcedInfos)
+        },
+        filteredSourcedInfos() {
+            return SourceUtils.filterSourcedInfos(this.plant.sourcedInfos)
         }
     },
     methods: {

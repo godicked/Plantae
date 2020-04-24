@@ -9,7 +9,7 @@ socket.on('connect', () => {
 })
 
 socket.on('lock-plant', function(data) {
-    console.log(data)
+    // console.log(data)
     store.commit('lockPlant', {id:data.id, isLocked:data.value})
 
     let plants = store.getters.plants()

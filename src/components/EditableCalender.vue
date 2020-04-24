@@ -89,8 +89,7 @@ import { ToggleButton } from 'vue-js-toggle-button'
         ToggleButton
     },
     props: {
-        value: Array,
-        weight: Array,
+        value: Object,
         colors: Array,
         editMode: Boolean,
         label: String,
@@ -113,37 +112,28 @@ import { ToggleButton } from 'vue-js-toggle-button'
     methods: {
         toggleMonth(month) {
             if(this.editMode) {
-                let val = this.value[month*2]
+                let val = this.value.dates[month*2]
                 if(val === this.defaultState) {
-                    this.$set(this.value, month*2, 0)
+                    this.$set(this.value.dates, month*2, 0)
                 }
                 else {
-                    this.$set(this.value, month*2, this.defaultState)
+                    this.$set(this.value.dates, month*2, this.defaultState)
                 }
             }
-            // if(this.editMode) {
-            //     if(this.value.includes(month)) {
-            //         this.value.splice( this.value.indexOf(month), 1 )
-            //     }
-            //     else {
-            //         this.value.push(month)
-            //         this.value.sort()
-            //     }
-            // }
         },
         color(month) {
-            // let selected = this.value[month*2] !== 0
+            // let selected = this.value.dates[month*2] !== 0
             // if(!selected) {
             //     return this.defaultColor
             // }
-            if(this.value[month*2] === 0) {
+            if(this.value.dates[month*2] === 0) {
                 return this.colors[0]
             }
 
-            let color = this.colors[this.value[month*2]]
+            let color = this.colors[this.value.dates[month*2]]
 
             let weight = 1
-            if(this.weight !== undefined) weight = this.weight[month*2]
+            if(this.value.weight !== undefined) weight = this.value.weight[month*2]
 
             // const maxWeight = this.maxWeight
             // weight = (((weight + 1) / 2) + weight) / 2
@@ -166,7 +156,7 @@ import { ToggleButton } from 'vue-js-toggle-button'
             return (col-1) + (row-1) * this.columns
         },
         toggleHandler(event) {
-            this.defaultState = event.value ? 2 : 1
+            this.defaultState = event.value.dates ? 2 : 1
             console.log(this.defaultState)
         }
     },

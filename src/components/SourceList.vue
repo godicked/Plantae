@@ -104,7 +104,9 @@ li {
 
             <ul :class="full?'source-full':'sources'">
                 <li @click="select(source)" v-for="source in sources" :key="source.name">
-                    <span v-if="full" @click="delSource(source)" class="delete-source-boutton">X</span>  <b>[{{source.rank}}] {{source.name}}</b> <i>{{source.description}}</i>
+                    <!-- <span v-if="full" @click="delSource(source)" class="delete-source-boutton">X</span> -->
+                    <b :style="{fontSize: source.rank == -1 ? '10px' : 'inhertit'}" >[{{source.rank}}] {{source.name}}</b> 
+                    <i>{{source.description}}</i>
                 </li>
             </ul>
         </div>
@@ -129,8 +131,10 @@ export default {
     },
     computed: {
         sources() {
-            console.log(this.excludedRanks)
-            return this.$store.getters.sourcesByName(this.searchString).filter(s => !this.excludedRanks.includes(s.rank))
+            let arr = Object.values(this.$store.getters.sourcesByName(this.searchString))
+            arr = arr.filter(s => !this.excludedRanks.includes(s.id) && s.rank !== -1)
+            arr.sort((a,b) => a.rank - b.rank)
+            return arr
         }
     },
     methods: {

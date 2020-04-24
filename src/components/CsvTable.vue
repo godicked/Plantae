@@ -54,8 +54,8 @@ td{
         <div v-for="(plant, idx) in sortedTable" :key="plant.name" @click="selectPlant(idx)" :class="{selected: idx===selectedPlant, 'calender-container':true}">
         <!-- <month-row :rowspan="idx === selectedPlant ? 2:1" :on-click="() => selectPlant(idx)" :label="plant.name" :default-color="idx === selectedPlant ? '#edbd24':'#c69707'" :selected-color="idx === selectedPlant ? '#00b000':'green'" :selected-month="plant.semis[0].dates" :offset="firstMonth"></month-row>
         <month-row :on-click="() => selectPlant(idx)" v-if="idx === selectedPlant" default-color="#edbd24" selected-color="#904040" :selected-month="plant.recolte" :offset="firstMonth"></month-row> -->
-            <sourced-calender :labelPos="3" :label="plant.name" :sourceText="false" :rows="1" :columns="12" class="calender" :value="computedSources[plant.name].semis" :colors="['#c69707', '#00b0b0', '#008000']" ></sourced-calender>
-            <sourced-calender v-if="idx === selectedPlant" :labelPos="3" :label="' '" :sourceText="false" :rows="1" :columns="12" class="calender" :value="computedSources[plant.name].recolte" :colors="['#c69707', '#904040']"></sourced-calender>
+            <editable-calender :labelPos="3" :label="plant.name" :rows="1" :columns="12" class="calender" :value="computedSources[plant._id].dates.semis" :colors="['#c69707', '#00b0b0', '#008000']" ></editable-calender>
+            <editable-calender v-if="idx === selectedPlant" :labelPos="3" :label="' '" :rows="1" :columns="12" class="calender" :value="computedSources[plant._id].dates.recolte" :colors="['#c69707', '#904040']"></editable-calender>
         </div>
     </div>
 </div>
@@ -65,14 +65,15 @@ td{
 import VueCsvImport from 'vue-csv-import'
 import MonthRow from './MonthRow'
 import * as SourceUtils from '../utils/Sources'
-import SourcedCalender from './SourcedCalender'
+import EditableCalender from './EditableCalender'
+import * as Sorting from '../utils/Sorting'
 
 export default {
     name: 'CsvTable',
     components: {
         VueCsvImport,
         MonthRow,
-        SourcedCalender
+        EditableCalender
     },
     props: {
         table: {
@@ -128,12 +129,12 @@ export default {
     },
     computed: {
         sortedTable() {
-            return this.sortBySemis(this.table)
+            return Sorting.sortPlants(this.table)
         },
         computedSources() {
             let cmp = {}
             this.table.forEach(plant => {
-                cmp[plant.name] = SourceUtils.computePlant(plant)
+                cmp[plant._id] = SourceUtils.computeSourcesToInfos(SourceUtils.filterSourcedInfos(plant.sourcedInfos))
             })
             return cmp
         }
@@ -185,17 +186,6 @@ export default {
             }
             // console.log(month.sort())
             return month.sort((a,b) => {return a-b})
-        },
-        sortBySemis(data){
-            let res = data.slice()
-            res = res.sort((cvs1, cvs2) => {
-                let diff = this.minMonth(cvs1.semis) - this.minMonth(cvs2.semis)
-                if(diff == 0) {
-                    return this.maxMonth(cvs1.semis) - this.maxMonth(cvs2.semis)
-                }
-                return diff
-            })
-            return res
         },
         monthToNumber(month) {
 

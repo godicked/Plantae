@@ -1,3 +1,52 @@
+import * as Factory from './Factory'
+import Vue from 'vue'
+
+export let computeSourcesToInfos = function(sources, cultivar) {
+    let src = JSON.parse(JSON.stringify(sources))
+    let info = Factory.PlantInfo()
+
+    info.dates.semis = compute(src, cultivar, (i) => i.dates.semis, computeDates)
+    info.dates.recolte = compute(src, cultivar, (i) => i.dates.recolte, computeDates)
+
+    return info
+}
+
+const compute = function(sources, cultivar, selectorFunc, computeFunc) {
+    const data = []
+
+    if(cultivar === undefined) {
+        getCultivarFromSources(sources).forEach(c => data.push(compute(sources, c, selectorFunc, computeFunc)))
+    }
+    else {
+        Object.keys(sources).forEach(sk => {
+            try {
+                const src = selectorFunc(sources[sk][cultivar])
+                if(src !== undefined) {
+                    data.push(src)
+                }
+            }
+            catch(e) {
+                // ignore
+            }
+        })
+    }
+    if(data.length === 0) {
+        return selectorFunc(Factory.PlantInfo())
+    }
+
+    return computeFunc(data)
+
+}
+
+let getCultivarFromSources = function(sources) {
+    let res = {}
+    Object.keys(sources).forEach(k => {
+        Object.keys(sources[k]).forEach(cultivar => res[cultivar] = cultivar)
+    })
+
+    return Object.values(res)
+}
+
 export let computePlant = function(plant) {
     let semis = []
     if(plant.cultivar.length === 0) 
@@ -38,7 +87,7 @@ export let computeDates = function(sources, override = true)  {
 
         let w = 0
         sources.forEach((s) => {
-            if(s.dates[i] === max) {
+            if(s.dates[i] === max && max !== 0) {
                 if(s.computed) {
                     // console.log('pre computed')
                     w += s.weight[i]
@@ -55,20 +104,20 @@ export let computeDates = function(sources, override = true)  {
     weight.forEach((w,i) => {if(w > maxWeight && dates[i] !== 0) maxWeight = w})
     weight = weight.map(w => w / maxWeight)
 
-    let names = []
-    sources.forEach(s => {
-        if(s.computed) {
-            s.names.forEach(n => {if(!names.includes(n)) {names.push(n)}})
-        }
-        else if(s.source === undefined) {
-            names.push('Default')
-        }
-        else {
-            names.push(s.source.name)
-        }
-    })
+    // let names = []
+    // sources.forEach(s => {
+    //     if(s.computed) {
+    //         s.names.forEach(n => {if(!names.includes(n)) {names.push(n)}})
+    //     }
+    //     else if(s.source === undefined) {
+    //         names.push('Default')
+    //     }
+    //     else {
+    //         names.push(s.source.name)
+    //     }
+    // })
     // console.log(weight)
-    return {dates, weight, names, computed:true, source: sources}
+    return {dates, weight, computed:true}
 }
 
 // Select only Defined (source.source !== undefined) Sources if some are available
@@ -79,3 +128,65 @@ export let selectDefinedSources = function(sources) {
     }
     return sources
 }
+
+//
+export let addMissingInfoFields = function(info) {
+    const model = Factory.PlantInfo()
+    let keys = Object.keys(model)
+
+    keys.forEach(k => {
+        // if(infoFromDb[k])
+        if(!info.hasOwnProperty(k)) {
+            Vue.set(info, k, {})
+        }
+        Object.keys(model[k]).forEach(k2 => {
+            if(!info[k].hasOwnProperty(k2)) {
+                Vue.set(info[k], k2, model[k][k2])
+            }
+        })
+    })
+}
+
+export let clearUnusedInfoFields = function(info) {
+    Object.keys(info).forEach(k1 => {
+        Object.keys(info[k1]).forEach(k2 => {
+            const val = info[k1][k2]
+            if(k1 != 'dates') {
+                if(val === undefined || val === '' || (Array.isArray(val) && val.length === 0)) {
+                    Vue.delete(info[k1], k2)
+                }
+            }
+            else {
+                if(!val.dates.some(v => v !== 0)) {
+                    Vue.delete(info[k1], k2)
+                }
+            }
+        })
+        if(Object.keys(info[k1]).length === 0) {
+            Vue.delete(info, k1)
+        }
+    })
+}
+
+export let clearPlantBeforeSave = function(plant) {
+    Object.keys(plant.sourcedInfos).forEach(k => {
+        Object.keys(plant.sourcedInfos[k]).forEach(k2 => {
+            clearUnusedInfoFields(plant.sourcedInfos[k][k2])
+        })
+    })
+}
+
+export const filterSourcedInfos = function(infos) {
+    let keys = Object.keys(infos)
+    if(keys.length < 2) {
+        return infos
+    }
+
+    let res = {}
+    keys.forEach(sId => {
+        if(sId !== 'default') {
+            res[sId] = infos[sId]
+        }
+    })
+    return res
+} 

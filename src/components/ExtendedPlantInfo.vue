@@ -240,6 +240,11 @@ img {
     overflow: auto;
 }
 
+h3 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
 .section {
     /* background:green; */
     display: inline-block;
@@ -255,7 +260,18 @@ img {
 }
 
 .edit {
-    width: 100%;
+    /* width: 100%; */
+}
+
+.source-container {
+    position: absolute;
+    bottom: 0px;
+    height: 30px;
+    left:0;
+    right: 0;
+    line-height: 30px;
+    /* background: yellow; */
+    padding-left: 20px;
 }
 </style>
 
@@ -290,51 +306,62 @@ img {
         </div>
 
         <div class="center-info">
-            <div style="text-align:center;">
-                <h2>Varieté: <span v-if="selectedVar === undefined">Toutes</span><span v-else>{{varieteName}}</span></h2>
+            <div v-if="!addSourceMode">
+                <div style="text-align:center;">
+                    <h2>Varieté: <span v-if="selectedVar === undefined">Toutes</span><span v-else>{{varieteName}}</span></h2>
+                </div>
+                <div class="info-container">
+                    <div class="section classification" :class="{edit:editMode}">
+                        <h3>Classification</h3>
+                        <table>
+                            <tr><td>Nom:</td><td><editable-input type="text" v-model="plant.name" :editMode="editMode"/></td></tr>
+                            <!-- <tr><td>Espèce:</td><td><editable-input type="text" v-model="plant.classification.species" :editMode="editMode"/></td></tr> -->
+                            <!-- <tr><td>Genre:</td><td><editable-input type="text" v-model="plant.classification.genus" :editMode="editMode"/></td></tr> -->
+                            <!-- <tr><td>Famille:</td><td><editable-input type="text" v-model="plant.classification.family" :editMode="editMode"/></td></tr> -->
+                            <!-- <tr><td>Ordre:</td><td><editable-input type="text" v-model="plant.classification.order" :editMode="editMode"/></td></tr> -->
+                        </table>
+                    </div>
+
+                    <div class="section properties" :class="{edit:editMode}">
+                        <h3>Propriétés</h3>
+                        <table>
+                            <tr><td>Cycle:</td><td><editable-select :acceptUndefined="true" v-model="info.properties.cycle" :editMode="editMode" :options="['Anuelle', 'Bisanuelle', 'Pérenne']"/></td></tr>
+                            <tr><td>Croissance:</td><td><editable-select v-model="info.properties.growth" :editMode="editMode" :options="['Lente', 'Moyenne', 'Rapide']"/></td></tr>
+                            <tr><td>Hateur:</td><td></td></tr>
+                            <tr><td>Largeur:</td><td></td></tr>
+                            <tr><td>Feuillage:</td><td></td></tr>
+                        </table>
+                    </div>
+
+                    <div class="section requirements" :class="{edit:editMode}">
+                        <h3>Conditions</h3>
+                        <table>
+                            <tr><td>Humidité:</td><td></td></tr>
+                            <tr><td>Secheresse:</td><td></td></tr>
+                            <tr><td>Temperature Min:</td><td></td></tr>
+                            <tr><td>Temperature Max:</td><td></td></tr>
+                            <tr><td>Type(s) de Sol:</td><td></td></tr>
+                            <tr><td>Soleil:</td><td></td></tr>
+                            <tr><td>Ombre:</td><td></td></tr>
+                            <tr><td>Ph:</td><td></td></tr>
+                        </table>
+                    </div>
+
+                    <div class="section" :class="{edit:editMode}">
+                        <h3>Dates</h3>
+                        <editable-calender :rows="2" :columns="6" class="calender" :editMode="editMode" label="Semis" :value="info.dates.semis" :colors="['#c69707', '#00b0b0', '#008000']"></editable-calender>
+                        <editable-calender :rows="2" :columns="6" class="calender" :editMode="editMode" label="Recoltes" :value="info.dates.recolte" :colors="['#c69707', '#904040']"></editable-calender>
+                    </div>
+                </div>
             </div>
-            <div class="info-container">
-                <div class="section classification" :class="{edit:editMode}">
-                    <h3>Classification</h3>
-                    <table>
-                        <tr><td>Nom:</td><td>{{plant.name}}</td></tr>
-                        <tr><td>Espèce:</td><td>{{plant.species}}</td></tr>
-                        <tr><td>Genre:</td><td>{{plant.genus}}</td></tr>
-                        <tr><td>Famille:</td><td><editable-input type="text" v-model="plant.family" :editMode="editMode"/></td></tr>
-                        <tr><td>Ordre:</td><td>{{plant.order}}</td></tr>
-                    </table>
-                </div>
-
-                <div class="section properties" :class="{edit:editMode}">
-                    <h3>Propriétés</h3>
-                    <table>
-                        <tr><td>Cycle:</td><td></td></tr>
-                        <tr><td>Croissance:</td><td></td></tr>
-                        <tr><td>Hateur:</td><td></td></tr>
-                        <tr><td>Largeur:</td><td></td></tr>
-                        <tr><td>Feuillage:</td><td></td></tr>
-                    </table>
-                </div>
-
-                <div class="section requirements" :class="{edit:editMode}">
-                    <h3>Conditions</h3>
-                    <table>
-                        <tr><td>Humidité:</td><td></td></tr>
-                        <tr><td>Secheresse:</td><td></td></tr>
-                        <tr><td>Temperature Min:</td><td></td></tr>
-                        <tr><td>Temperature Max:</td><td></td></tr>
-                        <tr><td>Type(s) de Sol:</td><td></td></tr>
-                        <tr><td>Soleil:</td><td></td></tr>
-                        <tr><td>Ombre:</td><td></td></tr>
-                        <tr><td>Ph:</td><td></td></tr>
-                    </table>
-                </div>
-
-                <div class="section dates" :class="{edit:editMode}">
-                    <h3>Dates</h3>
-                    <sourced-calender :rows="1" :columns="12" class="calender" :editMode="editMode" label="Semis" v-model="semisSource" :colors="['#c69707', '#00b0b0', '#008000']"></sourced-calender>
-                    <sourced-calender :rows="1" :columns="12" class="calender" :editMode="editMode" label="Recoltes" v-model="recolteSource" :colors="['#c69707', '#904040']"></sourced-calender>
-                </div>
+            <div v-else>
+                <source-list @select="addSource"/>
+            </div>
+            <div class="source-container">
+                <span>Source<span v-if="sourcesIds.length > 1 && !editMode">s</span>: </span>  
+                <selectable-list v-model="selectedSourceIdx" :selectMode="editMode" :options="sourcesNames"/>
+                <button v-if="editMode" @click="addSourceMode = true" style="margin-left:10px;">Add</button>
+                <button v-if="!addSourceMode && editMode && sourcesNames[selectedSourceIdx] !== 'Default'" @click="removeSelectedSource" style="margin-left:10px">Remove</button> 
             </div>
         </div>
     </div>
@@ -343,20 +370,24 @@ img {
 </template>
 
 <script>
-import SourcedCalender from './SourcedCalender'
+import EditableCalender from './EditableCalender'
 import EditableInput from './EditableInput'
 import SimpleButton from './SimpleButton'
 import * as Factory from '../utils/Factory'
 import * as SourceUtils from '../utils/Sources'
-// import EditableSelect from './EditableSelect'
+import EditableSelect from './EditableSelect'
+import SelectableList from './SelectableList'
+import SourceList from './SourceList'
 
 export default {
     name: 'ExtendedPlantInfo',
     components: {
-        SourcedCalender,
+        EditableCalender,
         EditableInput,
-        SimpleButton
-        // EditableSelect
+        SimpleButton,
+        EditableSelect,
+        SelectableList,
+        SourceList
     },
     props: {
         editMode: {
@@ -366,52 +397,54 @@ export default {
         plant: Object
     },
     data() { return {
-        selectedVar: undefined
+        selectedVar: undefined,
+        selectedSourceIdx: 0,
+        addSourceMode: false
     }},
     computed: {
+        sourcesIds() {
+            return Object.keys(this.filteredSourcedInfos)
+        },
+        sourcesNames() {
+            return this.sourcesIds.map(id => this.source(id).name)
+        },
+        filteredSourcedInfos() {
+            return SourceUtils.filterSourcedInfos(this.plant.sourcedInfos)
+        },
+
+        info() {
+            // console.log('computed: info')
+            let usedInfo
+            if(this.editMode) {
+                const infos = this.infosFromSourceIdx(this.selectedSourceIdx)
+                if(!infos.hasOwnProperty(this.selectedVarId)) {
+                    this.$set(infos, this.selectedVarId, {})
+                }
+                usedInfo = infos[this.selectedVarId]
+                SourceUtils.addMissingInfoFields(usedInfo)
+            }
+            else {
+                usedInfo = SourceUtils.computeSourcesToInfos(this.filteredSourcedInfos, this.selectedVarId)
+            }
+
+            // console.log('used info')
+            console.log(usedInfo)
+            return usedInfo
+        },
+        selectedVarId() {
+            let idx = this.safeSelectedVar
+            if(idx !== undefined) {
+                return this.plant.cultivar[idx].id
+            }
+            else {
+                return undefined
+            }
+        },
         safeSelectedVar() {
             if(this.selectedVar !== undefined && this.selectedVar > this.plant.cultivar.length-1) {
                 return undefined
             }
             return this.selectedVar
-        },
-        semisSource() {
-            if(this.safeSelectedVar === undefined) {
-                if(!this.editMode) {
-                    return SourceUtils.computePlant(this.plant).semis
-                }
-                return this.plant.semis
-            }
-            else {
-                let semis = this.plant.cultivar[this.selectedVar].semis
-
-                if(semis.length === 1 && semis[0].name === undefined && !semis[0].dates.some(d => d !== 0) && !this.editMode) {
-                    let cmp = SourceUtils.computePlant(this.plant).semis
-                    cmp.source = {name:'None'}
-                    return cmp
-                }
-
-                return semis
-            }
-        },
-        recolteSource() {
-            if(this.safeSelectedVar === undefined) {
-                if(!this.editMode) {
-                    return SourceUtils.computePlant(this.plant).recolte
-                }
-                return this.plant.recolte
-            }
-            else {
-                let recolte = this.plant.cultivar[this.selectedVar].recolte
-
-                if(recolte.length === 1 && recolte[0].name === undefined && !recolte[0].dates.some(d => d !== 0) && !this.editMode) {
-                    let cmp = SourceUtils.computePlant(this.plant).recolte
-                    cmp.source = {name:'None'}
-                    return cmp
-                }
-
-                return recolte
-            }
         },
         varieteName() {
             if(this.safeSelectedVar === undefined) {
@@ -421,15 +454,29 @@ export default {
         }
     },
     methods: {
+        source(id) {
+            return this.$store.getters.source(id)
+        },
+        infosFromSourceIdx(idx) {
+            return this.plant.sourcedInfos[this.sourcesIds[idx]]
+        },
         addVar() {
             // if(this.plant.cultivar === undefined) this.plant.cultivar = []
-            
-            this.plant.cultivar.push(Factory.Cultivar())
+            const maxId = Math.max(...this.plant.cultivar.map(c => c.id))
+            this.plant.cultivar.push(Factory.Cultivar(maxId+1))
             this.selectedVar = this.plant.cultivar.length-1
         },
         remVar(idx) {
+            const cultivar = this.plant.cultivar[idx]
             this.selectedVar = undefined
             this.plant.cultivar.splice(idx,1)
+            Object.keys(this.plant.sourcedInfos).forEach(k => {
+                console.log(cultivar)
+                console.log(k)
+                if(this.plant.sourcedInfos[k][cultivar.id]) {
+                    delete this.plant.sourcedInfos[k][cultivar.id]
+                }
+            })
         },
         selectVariete(idx) {
             console.log('select')
@@ -439,6 +486,21 @@ export default {
             else if(!this.editMode){
                 this.selectedVar = undefined
             }
+        },
+        addSource(source) {
+            this.$set(this.plant.sourcedInfos, source._id, {})
+            // this.plant = JSON.parse(JSON.stringify(this.plant))
+            this.addSourceMode = false
+            this.selectedSourceIdx = Object.keys(this.filteredSourcedInfos).length - 1
+        },
+        removeSelectedSource() {
+            const source = this.source(this.sourcesIds[this.selectedSourceIdx])
+            
+            // dont delete default source
+            if(source.name === 'Default') return
+
+            this.$delete(this.plant.sourcedInfos, source._id)
+            this.selectedSourceIdx = Math.max(this.selectedSourceIdx-1, 0)
         }
     },
 }

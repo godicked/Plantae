@@ -92,7 +92,7 @@
         <plant-editor
           ref="plant"
           v-for="plant in filteredPlant"
-          :key="plant.name"
+          :key="plant._id"
           :plant="plant"
           @delete="deletePlant"
           @submit="savePlant"
@@ -123,8 +123,7 @@ export default {
     SourceWizard
   },
   mounted() {
-    this.$store.commit("loadSourceFromDb");
-    this.$store.dispatch("loadPlants");
+    this.$store.dispatch("loadSourceFromDb").then(this.$store.dispatch("loadPlants"))
 
     SocketApi.init(this.$store, this.$snotify);
 
@@ -134,24 +133,14 @@ export default {
   data() {
     return {
       selected: "Plantes",
-      searchString: undefined,
-      newPlants: []
+      searchString: undefined
     };
   },
   methods: {
     savePlant(plant) {
-      // plant gets updated
+      // plant exist in db
       if (plant._id) {
         this.$store.dispatch("updatePlant", plant).then(p => {
-          this.scrollTo(p);
-        })
-      }
-      // plant is new
-      else {
-        this.$store.dispatch("addPlant", plant).then(p => {
-          // console.log(p)
-          const idxN = this.newPlants.map(p => p.sciName).indexOf(p.sciName);
-          this.newPlants.splice(idxN, 1);
           this.scrollTo(p);
         })
       }
@@ -186,23 +175,33 @@ export default {
       this.selected = selected;
     },
     addPlant() {
-      let name = "";
-      if (this.searchString !== undefined && this.searchString !== "") {
-        name = this.searchString;
-        this.searchString = "";
-      }
+        let name = "";
+        if (this.searchString !== undefined && this.searchString !== "") {
+            name = this.searchString;
+            this.searchString = "";
+        }
 
-      const plant = Factory.Plant(name);
-      plant.new = true;
-      this.newPlants.unshift(plant);
+        const plant = Factory.Plant(name);
+        console.log('add new plant: ')
+        console.log(plant)
+        
+        this.$store.dispatch("addPlant", plant).then(p => {
+            console.log(p)
+            this.scrollTo(p, true);
+        })
+
     },
-    scrollTo(plant) {
+    scrollTo(plant, expand) {
       this.$nextTick(() => {
         const selectedEditor = this.$refs.plant.filter(
           p => p.$props.plant._id === plant._id
         );
         console.log(selectedEditor);
         selectedEditor[0].$el.scrollIntoView(true);
+
+        if(expand === true && selectedEditor[0].expand === false) {
+          selectedEditor[0].toggleExpand()
+        }
       })
     }
   },
@@ -216,7 +215,7 @@ export default {
       return this.plants;
     },
     plants() {
-      return this.newPlants.concat(this.$store.getters.plants());
+      return this.$store.getters.plants();
     }
   }
 };

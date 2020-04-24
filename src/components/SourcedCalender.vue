@@ -53,7 +53,7 @@
 <template>
 <div>
     <div>
-        <editable-calender :hideMonth="hideMonth" :labelPos="labelPos" :rows="rows" :columns="columns" @input="$emit('input', $event.target.value)" :weight="weight" :editMode="editMode" :label="label" :value="dates" :colors="colors"></editable-calender>
+        <editable-calender :hideMonth="hideMonth" :labelPos="labelPos" :rows="rows" :columns="columns" @input="$emit('input', $event.target.value)" :editMode="editMode" :label="label" :value="{dates,weight}" :colors="colors"></editable-calender>
         <div class="source-field" v-if="!addSourceMode && sourceText">
             <span v-if="editMode">Select </span>Source: 
             <editable-select :class="names[0] === 'None'?'red':''" :editMode="editMode" v-model="dataIdx" :options="names"></editable-select>

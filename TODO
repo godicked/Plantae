@@ -18,3 +18,53 @@ ca serrai sympas d'avoir le nom de la source d'info representé comme c'est le c
 les dates de semis. Mais sans avoir l'impression que ca prenne toute la place.
 Pour les varietées/cultivars de plantes la majorité des variable restent identiques mais 
 peuvent potentiellement toutes changer. Comment rendre les changements clair visuelement ?
+
+
+plant:
+ -species
+ -genus
+
+sources: (key:source.id, value: source)
+
+
+source: {
+    id,
+    name,
+    description,
+    plantInfos (key: plantId, value: plantInfo)
+}
+
+
+plantInfo: {
+    properties,
+    requirements,
+    dates,
+    cultivarInfos (key: cultivarId, value: cultivarInfo) 
+}
+
+cultivarInfo {
+    properties,
+    requirements,
+    dates
+}
+
+Plant
+Cultivar
+
+Source
+PlantInfo
+CultivarInfo
+
+
+Plant:
+    id
+    name
+    sourcedInfos (sourceId, Infos)
+
+Infos: (varId, Info)
+
+Info:
+    requirements
+    properties
+    dates
+    usages
