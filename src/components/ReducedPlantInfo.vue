@@ -132,8 +132,8 @@ img {
 
     <div class="soil-container">
         <img src="./../../res/sable.svg" class="info-soil active-soil"/>
-        <img src="./../../res/terre.png" class="info-soil active-soil"/>
-        <img src="./../../res/argile.png" class="info-soil"/>
+        <img src="./../../res/limon.svg" class="info-soil active-soil"/>
+        <img src="./../../res/argile.svg" class="info-soil active-soil"/>
     </div>
   </div>
 </template>
