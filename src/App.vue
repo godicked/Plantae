@@ -58,6 +58,12 @@
 
 </style>
 
+<style>
+textarea:focus, input:focus{
+    outline: none;
+}
+</style>
+
 <template>
   <div id="app">
     <vue-snotify></vue-snotify>

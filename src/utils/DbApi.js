@@ -66,15 +66,15 @@ export let getSources = async function() {
     }
 }
 
-export let addSources = async function(source) {
+export let addSource = async function(source) {
     try {
         let saved = await axios.post('/source/add', source)
-        return saved
+        return saved.data
     }
     catch(err) {
         console.log('Could not Add source into DB')
         console.log(err)
-        return source
+        return undefined
     }
 }
 

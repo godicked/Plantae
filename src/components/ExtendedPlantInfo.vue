@@ -1,3 +1,20 @@
+<style>
+input {
+    /* height: 20px; */
+    /* padding: 5px; */
+    margin: 0;
+    border: 0;
+    overflow: hidden;
+    font-size:inherit;
+    font-family: inherit;
+    color:inherit;
+    border:none;
+    background-color: white;
+    border-radius: 10px;
+    /* text-align: left; */
+}
+</style>
+
 <style scoped>
 
 .plant-image {
@@ -33,7 +50,7 @@
 img {
     height: 100%;
     margin: 0 auto;
-} 
+}
 
 .plant-name {
     position: relative;
@@ -47,19 +64,22 @@ img {
     text-align: center;
     /* line-height: 50px; */
     padding: 5px;
+    padding-top: 10px;
+    padding-bottom: 0;
     cursor: pointer;
 }
-.plant-name input{
+.plant-name >>> input{
+    padding: 5px;
     font-size: 20px;
-    font-family: inherit;
-    color:inherit;
-    border:none;
+    width: 220px;
     background-color: rgb(252, 251, 244);
-    border-radius: 30px;
 }
-
-.plant-name span {
+.plant-name >>> span {
     cursor: inherit;
+    display: inline-block;
+    padding: 5px;
+    width: 220px;
+    /* text-align: center; */
 }
 
 .extended-info-container {
@@ -165,22 +185,21 @@ img {
     display: inline-block;
 }
 
-.variete input {
+.variete >>> input {
     width: 100%;
-    padding: 0;
+    /* padding: 0;
     padding-left: 5px;
-    padding-right: 5px;
-    border: none;
+    padding-right: 5px; */
+    /* border: none; */
     height: 30px;
     width: 242px;
     margin-left: -5px;
-    font-size: inherit;
-    color:inherit;
+    /* font-size: inherit;
+    color:inherit; */
     text-align: left;
-    font-family: inherit;
-    /* margin-top: 5px; */
+    /* font-family: inherit; */
     background-color: rgb(252, 251, 244);
-    border-radius: 15px;
+    /* border-radius: 15px; */
 
 }
 
@@ -256,7 +275,7 @@ h3 {
 }
 
 .dates {
-    width: 100%;
+    width: 40%;
 }
 
 .edit {
@@ -273,6 +292,17 @@ h3 {
     /* background: yellow; */
     padding-left: 20px;
 }
+
+.section >>> input {
+    text-align: left;
+    padding-left: 5px;
+}
+
+
+.section >>> span {
+    padding-left: 5px;
+}
+
 </style>
 
 <template>
@@ -347,7 +377,7 @@ h3 {
                         </table>
                     </div>
 
-                    <div class="section" :class="{edit:editMode}">
+                    <div class="section dates" :class="{edit:editMode}">
                         <h3>Dates</h3>
                         <editable-calender :rows="2" :columns="6" class="calender" :editMode="editMode" label="Semis" :value="info.dates.semis" :colors="['#c69707', '#00b0b0', '#008000']"></editable-calender>
                         <editable-calender :rows="2" :columns="6" class="calender" :editMode="editMode" label="Recoltes" :value="info.dates.recolte" :colors="['#c69707', '#904040']"></editable-calender>
@@ -437,7 +467,7 @@ export default {
             }
 
             // console.log('used info')
-            console.log(usedInfo)
+            // console.log(usedInfo)
             return usedInfo
         },
         selectedVarId() {

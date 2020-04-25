@@ -230,7 +230,7 @@
                     <simple-boutton hover-color="rgb(248, 242, 214)" :class="bouttonClass" v-if="!expand" @click="toggleExpand" >Expand</simple-boutton>
                     <simple-boutton hover-color="rgb(248, 242, 214)" :locked="editMode" :class="bouttonClass" v-if="expand" @click="toggleExpand" >Reduce</simple-boutton>
             </div>
-            <reduced-info-f v-else @click="toggleExpand" :plant="editedPlant" :editMode="editMode"></reduced-info-f>
+            <reduced-plant-info v-else @click="toggleExpand" :plant="editedPlant" :editMode="editMode"></reduced-plant-info>
         </div>
     </div>
 </template>
@@ -241,7 +241,6 @@ import ReducedPlantInfo from './ReducedPlantInfo.vue'
 import ExtendedPlantInfo from './ExtendedPlantInfo.vue'
 import SimpleBoutton from './SimpleButton.vue'
 import * as SocketApi from '../utils/SocketApi'
-import ReducedInfoF from './ReducedInfoF'
 import * as SourceUtils from '../utils/Sources'
 
 export default {
@@ -250,7 +249,6 @@ export default {
     ReducedPlantInfo,
     ExtendedPlantInfo,
     SimpleBoutton,
-    ReducedInfoF
     },
     props: {
         plant: {

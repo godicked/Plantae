@@ -27,7 +27,7 @@ export default {
     methods: {
         addSource() {
             // console.log(this.$store)
-            this.$store.commit('addSource', {name: this.name, description: this.description})
+            this.$store.dispatch('addSource', {name: this.name, description: this.description})
             this.cancel()
         },
         cancel() {

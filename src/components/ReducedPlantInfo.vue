@@ -1,4 +1,10 @@
 <style scoped>
+.container {
+    background-color: rgb(226, 226, 226);
+    width: 276px;
+    /* height: 100%; */
+    padding-top: 10px;
+}
 .plant-image {
     position: relative;
     display: block;
@@ -7,32 +13,13 @@
     width: 230px;
     height: 230px;
     overflow: hidden;
-    border-radius: 50%;
+    /* border-radius: 50%; */
 }
 
-
-.plant-image input {
-    position: absolute;
-    top: 105px;
-    left: 5px;
-    width: 220px;
-    height: 20px;
-    padding: 0;
-    margin: 0;
-    border: 0;
-    overflow: hidden;
-    font-size: 10px;
-    font-family: inherit;
-    color:inherit;
-    border:none;
-    background-color: rgb(241, 239, 223);
-    border-radius: 15px;
-    text-align: center;
-}
 img {
     height: 100%;
     margin: 0 auto;
-} 
+}
 
 .plant-name {
     position: relative;
@@ -46,100 +33,151 @@ img {
     line-height: 50px;
     padding: 0;
 }
-.plant-name input{
-    width: 210px;
+
+.icon-container {
+    width: 256px;
+    /* margin: 10px; */
+    margin-left: 10px;
+    /* margin-bottom: 0; */
+    /* background: yellow; */
+    text-align: center;
+    /* padding-bottom: 10px; */
+}
+
+.info-icon {
+    height: 50px;
+    width: 50px;
+    /* background: white; */
+}
+
+.soil-container {
+    margin:0;
+    padding:0;
+    height: 81px;
+}
+
+.info-soil {
+    display: inline-block;
+    width: 92px;
+    margin: 0;
     padding: 0;
-    font-size: 20px;
-    font-family: inherit;
-    color:inherit;
-    border:none;
-    background-color: rgb(241, 239, 223);
-    border-radius: 30px;
-    padding-left: 10px; 
-    padding-right: 10px;
+    /* height: 60px; */
+    opacity: 0.5;
 }
 
-.plant-name span {
-    cursor: default;
-}
-
-.calender {
-    width: 90%;
-    margin: 0 auto;
-}
-.top-option-panel input{
-    width: 130px;
-}
-
-.calenders {
-    /* background-color: yellow; */
-    height: 254px;
-    overflow: scroll;
+.info-soil img {
     width: 100%;
 }
+.active-soil {
+    opacity: 1;
+}
+
+.temp {
+    position:absolute;
+    display: inline-block;
+    left:20px;
+    height: 35px;
+    width: 5px;
+}
+.low {
+    top:210px;
+}
+
+.high {
+    top:15px;
+}
+
+.size {
+    position:absolute;
+    display: inline-block;
+    right:20px;
+    height: 35px;
+    width: 5px;
+}
+
+.size-width {
+    position:absolute;
+    display: inline-block;
+    right:3px;
+    height: 4px;
+    top: 220px;
+}
+
 
 </style>
 
 <template>
-<div>
+  <div class="container" @click="$emit('click')">
     <div class="plant-image">
-        <img :src="plant.image"/>
-        <input v-if="editMode"  type="text" v-model="plant.image" placeholder="image url"/>
+        <circular-calender style="width:100%; height:100%;" :image="plant.image" :semis="semisSource" :recolte="recolteSource"></circular-calender>
     </div>
-    
-    <div class="plant-name"><editable-input :editMode="editMode" type="text" v-model="plant.name"/></div>
 
-    <div class="calenders">
-        <sourced-calender class="calender" :editMode="editMode" label="Semis" v-model="semisSource" :colors="['#c69707', '#00b0b0', '#008000']" ></sourced-calender>
-        <sourced-calender @addSource="scrollToSource($event)" class="calender" :editMode="editMode" v-model="recolteSource" :colors="['#c69707', '#904040']" label="Recoltes" ></sourced-calender>
+    <img src="./../../res/Asset 5.png" class="temp low"/>
+    <img src="./../../res/Asset 6.png" class="temp high"/>
+    <img src="./../../res/Asset 8.png" class="size-width"/>
+    <img src="./../../res/Asset 7.png" class="size high"/>
+
+    <div class="plant-name">
+      {{plant.name}}
     </div>
-</div>
-    
+
+    <table class="icon-container">
+        <tr>
+            <td><img src="./../../res/moist.svg" class="info-icon"/></td>
+            <td><img src="./../../res/soleil-full.svg" class="info-icon"/></td>
+            <td><img src="./../../res/Asset 3.svg" class="info-icon"/></td>
+            <td><img src="./../../res/ph-neutre.svg" class="info-icon"/></td>
+        </tr>
+    </table>
+
+    <div class="soil-container">
+        <img src="./../../res/sable.svg" class="info-soil active-soil"/>
+        <img src="./../../res/terre.png" class="info-soil active-soil"/>
+        <img src="./../../res/argile.png" class="info-soil"/>
+    </div>
+  </div>
 </template>
 
 <script>
-import EditableCalender from './EditableCalender.vue'
-import EditableInput from './EditableInput.vue'
-import SourcedCalender from './SourcedCalender'
-import * as SourceUtils from '../utils/Sources'
+import EditableCalender from './EditableCalender.vue';
+import EditableInput from './EditableInput.vue';
+import SourcedCalender from './SourcedCalender';
+import * as SourceUtils from '../utils/Sources';
+import CircularCalender from './CircularCalender';
 
 export default {
-    name: 'ReducedPlantInfo',
+    name: "ReducedPlantInfo",
     components: {
         EditableCalender,
         EditableInput,
-        SourcedCalender
+        SourcedCalender,
+        CircularCalender
     },
     props: {
         editMode: {
-            type: Boolean,
-            default: false
+        type: Boolean,
+        default: false
         },
         plant: Object
     },
     computed: {
         semisSource() {
-            if(!this.editMode) {
-                return SourceUtils.computePlant(this.plant).semis
-            }
-            else {
-                return this.plant.semis
-            }
+            return this.info.dates.semis
         },
         recolteSource() {
-            if(!this.editMode) {
-                return SourceUtils.computePlant(this.plant).recolte
-            }
-            else {
-                return this.plant.recolte
-            }
+            return this.info.dates.recolte
+        },
+        info() {
+            return SourceUtils.computeSourcesToInfos(this.filteredSourcedInfos)
+        },
+        filteredSourcedInfos() {
+            return SourceUtils.filterSourcedInfos(this.plant.sourcedInfos)
         }
     },
     methods: {
         scrollToSource(target) {
-            this.$nextTick(() => target.parentElement.scrollTo(0,200))
+        this.$nextTick(() => target.parentElement.scrollTo(0, 200));
         }
     }
 }
-
 </script>

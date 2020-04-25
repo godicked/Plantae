@@ -44,18 +44,6 @@ export default new Vuex.Store({
         // }
     },
     mutations: {
-        addSource(state, source) {
-            if(state.sources.some(s => s.name === source.name)) {
-                return
-            }
-
-            let maxId = Math.max(-1, ...state.sources.map(s => s.rank))
-            source.rank = maxId+1
-
-            state.sources.push(source)
-
-            axios.post('/source/add', source)
-        },
         delSource(state, source) {
             var idx = state.sources.indexOf(s => s.rank = source.rank)
             state.sources.splice(idx,1)
@@ -63,8 +51,11 @@ export default new Vuex.Store({
         },
         setSources(state, sources) {
             // state.sources = sources
-            Vue.set(state.Sources, 'default', {name:'Default', _id:'default', rank:-1})
-            sources.forEach(s => Vue.set(state.Sources, s._id, s))
+            sources.forEach(s => {
+                if(s !== undefined) {
+                    Vue.set(state.Sources, s._id, s)
+                }
+            })
         },
         setPlants(state, plants) {
             plants.forEach(p => {
@@ -134,8 +125,21 @@ export default new Vuex.Store({
             // plants.forEach(p => context.dispatch('updatePlant', p))
         },
         async loadSourceFromDb(context) {
-            axios.get('/source/get').then((res) => {
+            return axios.get('/source/get').then((res) => {
+                const src = res.data
+                src.push({name:'Default', _id:'default', rank:-1})
                 context.commit('setSources', res.data)
+            })
+        },
+        async addSource({commit, state}, source) {
+            if(Object.values(state.Sources).some(s => s.name === source.name)) {
+                return
+            }
+            // TODO: server side
+            let maxId = Math.max(-1, ...Object.values(state.Sources).map(s => s.rank))
+            source.rank = maxId+1
+            Db.addSource(source).then(s => {
+                commit('setSources', [s])
             })
         },
         async addPlant(context, plant) {
