@@ -3,12 +3,13 @@ import Vuex from 'vuex'
 import axios from 'axios'
 import * as Db from '../utils/DbApi'
 import * as Sorting from '../utils/Sorting'
+import * as SourceUtils from '../utils/Sources'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        sources: [],
+        // sources: [],
         plants: {},
         Sources: {},
     },
@@ -52,7 +53,6 @@ export default new Vuex.Store({
             source.rank = maxId+1
 
             state.sources.push(source)
-            console.log(state)
 
             axios.post('/source/add', source)
         },
@@ -68,10 +68,12 @@ export default new Vuex.Store({
         },
         setPlants(state, plants) {
             plants.forEach(p => {
+                SourceUtils.addDefaultSourceIfMissing(p)
                 Vue.set(state.plants, p._id, p)
             })
         },
         setPlant(state, plant) {
+            SourceUtils.addDefaultSourceIfMissing(plant)
             Vue.set(state.plants, plant._id, plant)
         },
         deletePlant(state, id) {

@@ -96,7 +96,8 @@ li {
             <div class="top-option-panel">
                 <input type="text" v-model="searchString" placeholder="Search by Name..."/>
                 <div class="plant-options">
-                    <span @click="searchString=''; $emit('clear');">Cancel</span>
+                    <span @click="searchString=''; $emit('clear');">Clear</span>
+                    <span @click="$emit('cancel')">Cancel</span>
                     <!-- <span>Add</span> -->
                 </div>
                 <hr style="margin-left:10px;">

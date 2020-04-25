@@ -10,8 +10,7 @@ export let Plant = function(name) {
     return {
         name: name !== undefined? name : '',
         sciName: '',
-        cultivar: [],
-        sourcedInfos: { 'default': { 'undefined': PlantInfo()}}
+        cultivar: []
     }
 }
 

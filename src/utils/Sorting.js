@@ -2,6 +2,7 @@ import * as SourceUtils from './Sources'
 
 export let sortPlants = function(plants) {
     plants.sort((a, b) => {
+
         let i1 = JSON.parse(JSON.stringify(a.sourcedInfos))
         let i2 = JSON.parse(JSON.stringify(b.sourcedInfos))
 
@@ -10,16 +11,8 @@ export let sortPlants = function(plants) {
 
         i1 = SourceUtils.computeSourcesToInfos(SourceUtils.filterSourcedInfos(i1))
         i2 = SourceUtils.computeSourcesToInfos(SourceUtils.filterSourcedInfos(i2))
-        // let s1 = SourceUtils.computePlant(a).semis
-        // let s2 = SourceUtils.computePlant(b).semis
-
 
         return sortDates(i1.dates.semis.dates, i2.dates.semis.dates)
-
-        // s1 = SourceUtils.computeDates(s1).dates
-        // s2 = SourceUtils.computeDates(s2).dates
-
-        // return sortDates(s1,s2)
     })
 
     return plants

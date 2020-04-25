@@ -354,13 +354,13 @@ h3 {
                     </div>
                 </div>
             </div>
-            <div v-else>
-                <source-list @select="addSource"/>
+            <div v-else-if="editMode">
+                <source-list @select="addSource" @cancel="addSourceMode = false"/>
             </div>
             <div class="source-container">
                 <span>Source<span v-if="sourcesIds.length > 1 && !editMode">s</span>: </span>  
                 <selectable-list v-model="selectedSourceIdx" :selectMode="editMode" :options="sourcesNames"/>
-                <button v-if="editMode" @click="addSourceMode = true" style="margin-left:10px;">Add</button>
+                <button v-if="editMode && !addSourceMode" @click="addSourceMode = true" style="margin-left:10px;">Add Source</button>
                 <button v-if="!addSourceMode && editMode && sourcesNames[selectedSourceIdx] !== 'Default'" @click="removeSelectedSource" style="margin-left:10px">Remove</button> 
             </div>
         </div>
@@ -395,6 +395,15 @@ export default {
             default: false
         },
         plant: Object
+    },
+    watch: {
+        editMode: {
+            handler(val) {
+                if(val === false) {
+                    this.addSourceMode = false
+                }
+            }
+        }
     },
     data() { return {
         selectedVar: undefined,

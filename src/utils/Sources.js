@@ -47,22 +47,6 @@ let getCultivarFromSources = function(sources) {
     return Object.values(res)
 }
 
-export let computePlant = function(plant) {
-    let semis = []
-    if(plant.cultivar.length === 0) 
-        semis.push(computeDates(selectDefinedSources(plant.semis)))
-    
-        plant.cultivar.forEach(c => semis.push(computeDates(selectDefinedSources(c.semis))))
-    // console.log(semis)
-
-    let recolte = []
-    if(plant.cultivar.length === 0) 
-        recolte.push(computeDates(selectDefinedSources(plant.recolte)))
-    
-        plant.cultivar.forEach(c => recolte.push(computeDates(selectDefinedSources(c.recolte))))
-    return {semis, recolte}
-}
-
 // aggregate multiples dates to one weighted dates array
 export let computeDates = function(sources, override = true)  {
     // console.log('compute: ' + sources.length + ' cmp: ' + sources[0].computed)
@@ -145,6 +129,15 @@ export let addMissingInfoFields = function(info) {
             }
         })
     })
+}
+
+export const addDefaultSourceIfMissing = function(plant) {
+    if(!plant.sourcedInfos) {
+        plant.sourcedInfos = {}
+    }
+    if(!plant.sourcedInfos.default) {
+        plant.sourcedInfos.default = {'undefined': {}}
+    }
 }
 
 export let clearUnusedInfoFields = function(info) {
