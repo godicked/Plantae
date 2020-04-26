@@ -29,7 +29,8 @@
 <template>
 <div>
     <div class="vertical-menu" v-if="options !== undefined">
-        <a v-for="option in options" :key="option" href="#" v-on:click="onClick(option)" :class="selected === option ? 'active':''">{{option}}</a>
+        <a v-for="option in options" :key="option" href="#" @click="onClick(option)" :class="selected === option ? 'active':''">{{option}}</a>
+        <a href="#" @click.stop="$store.dispatch('changeDbForm')" >UPDATE DATABASE FUNC</a>
     </div>
 </div>
 </template>

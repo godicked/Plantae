@@ -9,7 +9,6 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        // sources: [],
         plants: {},
         Sources: {},
     },
@@ -80,49 +79,53 @@ export default new Vuex.Store({
         }
     },
     actions: {
-        async loadPlants(context) {
+        async changeDbForm(context) {
             let plants = await Db.getPlants()
-            // plants.forEach(p => {
+            plants.forEach(p => {
 
-            //     let ii = 0
-            //     p.cultivar.forEach(c => {
-            //         c.id = ii
-            //         ii++
-            //     })
+                let ii = 0
+                p.cultivar.forEach(c => {
+                    c.id = ii
+                    ii++
+                })
 
-            //     p.sourcedInfos = {}
-            //     p.sourcedInfos['default'] = {}
-            //     p.sourcedInfos.default.undefined = {dates: {semis: p.semis[0]}}
-            //     p.sourcedInfos.default.undefined.dates.recolte = p.recolte[0]
+                p.sourcedInfos = {}
+                p.sourcedInfos['default'] = {}
+                p.sourcedInfos.default.undefined = {dates: {semis: p.semis[0]}}
+                p.sourcedInfos.default.undefined.dates.recolte = p.recolte[0]
 
-            //     p.cultivar.forEach(c => c.semis.forEach(s => {
-            //         let id = "default"
-            //         if(s.source) {
-            //             id = s.source._id
-            //         }
-            //         if(!p.sourcedInfos[id]) {
-            //             p.sourcedInfos[id] = { "undefined": {dates: {semis: s}}}
-            //         }
+                p.cultivar.forEach(c => c.semis.forEach(s => {
+                    let id = "default"
+                    if(s.source) {
+                        id = s.source._id
+                    }
+                    if(!p.sourcedInfos[id]) {
+                        p.sourcedInfos[id] = { "undefined": {dates: {semis: s}}}
+                    }
 
-            //         p.sourcedInfos[id][c.id] = {dates: {semis: s}}
-            //     }))
+                    p.sourcedInfos[id][c.id] = {dates: {semis: s}}
+                }))
 
-            //     p.cultivar.forEach(c => c.recolte.forEach(r => {
-            //         let id = "default"
-            //         if(r.source) {
-            //             id = r.source._id
-            //         }
-            //         if(!p.sourcedInfos[id]) {
-            //             p.sourcedInfos[id].undefined.dates.recolte = r
-            //         }
+                p.cultivar.forEach(c => c.recolte.forEach(r => {
+                    let id = "default"
+                    if(r.source) {
+                        id = r.source._id
+                    }
+                    if(!p.sourcedInfos[id]) {
+                        p.sourcedInfos[id].undefined.dates.recolte = r
+                    }
 
-            //         p.sourcedInfos[id][c.id].dates.recolte =  r
-            //     }))
+                    p.sourcedInfos[id][c.id].dates.recolte =  r
+                }))
 
-            // })
+            })
 
             context.commit('setPlants', plants)
-            // plants.forEach(p => context.dispatch('updatePlant', p))
+            plants.forEach(p => context.dispatch('updatePlant', p))
+        },
+        async loadPlants(context) {
+            let plants = await Db.getPlants()
+            context.commit('setPlants', plants)
         },
         async loadSourceFromDb(context) {
             return axios.get('/source/get').then((res) => {
