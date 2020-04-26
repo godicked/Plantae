@@ -131,9 +131,9 @@ img {
     </table>
 
     <div class="soil-container">
-        <img src="./../../res/sable.svg" class="info-soil active-soil"/>
-        <img src="./../../res/limon.svg" class="info-soil active-soil"/>
-        <img src="./../../res/argile.svg" class="info-soil active-soil"/>
+        <img src="./../../res/soil_1.svg" class="info-soil "/>
+        <img src="./../../res/soil_2.svg" class="info-soil "/>
+        <img src="./../../res/soil_3.svg" class="info-soil "/>
     </div>
   </div>
 </template>

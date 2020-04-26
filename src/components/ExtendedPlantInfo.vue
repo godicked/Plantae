@@ -279,7 +279,7 @@ h3 {
 }
 
 .edit {
-    /* width: 100%; */
+    width: 50%;
 }
 
 .source-container {
