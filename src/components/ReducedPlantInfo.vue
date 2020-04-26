@@ -131,9 +131,9 @@ img {
     </table>
 
     <div class="soil-container">
-        <img src="./../../res/soil_1.svg" class="info-soil "/>
-        <img src="./../../res/soil_2.svg" class="info-soil "/>
-        <img src="./../../res/soil_3.svg" class="info-soil "/>
+        <img src="./../../res/soil_1.svg" class="info-soil " :class="{'active-soil': soilIsOk(0)}"/>
+        <img src="./../../res/soil_2.svg" class="info-soil " :class="{'active-soil': soilIsOk(1)}"/>
+        <img src="./../../res/soil_3.svg" class="info-soil " :class="{'active-soil': soilIsOk(2)}"/>
     </div>
   </div>
 </template>
@@ -176,7 +176,10 @@ export default {
     },
     methods: {
         scrollToSource(target) {
-        this.$nextTick(() => target.parentElement.scrollTo(0, 200));
+            this.$nextTick(() => target.parentElement.scrollTo(0, 200));
+        },
+        soilIsOk(n) {
+            return this.info.requirements.soil.includes(n)
         }
     }
 }

@@ -17,7 +17,9 @@ export let Plant = function(name) {
 export let PlantInfo = function() {
     return {
         properties: {},
-        requirements: {},
+        requirements: {
+            soil: []
+        },
         dates: {
             semis: {dates: Array(24).fill(0)},
             recolte: {dates: Array(24).fill(0)}

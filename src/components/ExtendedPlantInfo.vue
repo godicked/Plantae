@@ -366,14 +366,14 @@ h3 {
                     <div class="section requirements" :class="{edit:editMode}">
                         <h3>Conditions</h3>
                         <table>
-                            <tr><td>Humidité:</td><td></td></tr>
-                            <tr><td>Secheresse:</td><td></td></tr>
-                            <tr><td>Temperature Min:</td><td></td></tr>
-                            <tr><td>Temperature Max:</td><td></td></tr>
-                            <tr><td>Type(s) de Sol:</td><td></td></tr>
-                            <tr><td>Soleil:</td><td></td></tr>
-                            <tr><td>Ombre:</td><td></td></tr>
-                            <tr><td>Ph:</td><td></td></tr>
+                            <tr><td>Humidité:</td>          <td></td></tr>
+                            <tr><td>Secheresse:</td>        <td></td></tr>
+                            <tr><td>Temperature Min:</td>   <td></td></tr>
+                            <tr><td>Temperature Max:</td>   <td></td></tr>
+                            <tr><td>Type(s) de Sol:</td>    <td><multi-select v-model="info.requirements.soil" :editMode="editMode" :options="['sableux', 'limoneux', 'argileux']" /></td></tr>
+                            <tr><td>Soleil:</td>            <td></td></tr>
+                            <tr><td>Ombre:</td>             <td></td></tr>
+                            <tr><td>Ph:</td>                <td></td></tr>
                         </table>
                     </div>
 
@@ -408,6 +408,7 @@ import * as SourceUtils from '../utils/Sources'
 import EditableSelect from './EditableSelect'
 import SelectableList from './SelectableList'
 import SourceList from './SourceList'
+import MultiSelect from './MultiSelect'
 
 export default {
     name: 'ExtendedPlantInfo',
@@ -417,7 +418,8 @@ export default {
         SimpleButton,
         EditableSelect,
         SelectableList,
-        SourceList
+        SourceList,
+        MultiSelect
     },
     props: {
         editMode: {

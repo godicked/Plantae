@@ -8,8 +8,19 @@ export let computeSourcesToInfos = function(sources, cultivar) {
     info.dates.semis = compute(src, cultivar, (i) => i.dates.semis, computeDates)
     info.dates.recolte = compute(src, cultivar, (i) => i.dates.recolte, computeDates)
 
+
+    info.requirements.soil = compute(src, cultivar, (i) => i.requirements.soil, uniqueUnion)
+
     return info
 }
+
+const uniqueUnion = function(arrays) {
+    const vals = {}
+    arrays.forEach(arr => arr.forEach(value => vals[value] = value))
+    const res = Object.values(vals)
+    res.sort()
+    return res
+} 
 
 const compute = function(sources, cultivar, selectorFunc, computeFunc) {
     const data = []
