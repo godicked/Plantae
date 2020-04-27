@@ -5,19 +5,78 @@ export let computeSourcesToInfos = function(sources, cultivar) {
     let src = JSON.parse(JSON.stringify(sources))
     let info = Factory.PlantInfo()
 
-    info.dates.semis = compute(src, cultivar, (i) => i.dates.semis, computeDates)
-    info.dates.recolte = compute(src, cultivar, (i) => i.dates.recolte, computeDates)
+    info.dates.semis        = compute(src, cultivar, (i) => i.dates.semis, computeDates)
+    info.dates.recolte      = compute(src, cultivar, (i) => i.dates.recolte, computeDates)
 
+    info.properties.cycle   = compute(src, cultivar, (i) => i.properties.cycle, uniqueUnion)
+    info.properties.growth  = compute(src, cultivar, (i) => i.properties.growth, uniqueUnion)
+    info.properties.height  = compute(src, cultivar, (i) => i.properties.height, minMaxExtreme)
+    info.properties.width   = compute(src, cultivar, (i) => i.properties.width, minMaxExtreme)
+    info.properties.leaf  = compute(src, cultivar, (i) => i.properties.leaf, uniqueUnion)
 
-    info.requirements.soil = compute(src, cultivar, (i) => i.requirements.soil, uniqueUnion)
+    info.requirements.moisture  = compute(src, cultivar, (i) => i.requirements.moisture, uniqueUnion)
+    info.requirements.drought  = compute(src, cultivar, (i) => i.requirements.drought, uniqueUnion)
+    info.requirements.tempMin  = compute(src, cultivar, (i) => i.requirements.tempMin, minVal)
+    info.requirements.tempMax  = compute(src, cultivar, (i) => i.requirements.tempMax, maxVal)
+    info.requirements.soil  = compute(src, cultivar, (i) => i.requirements.soil, uniqueUnion)
+    info.requirements.sun  = compute(src, cultivar, (i) => i.requirements.sun, uniqueUnion)
+    info.requirements.ph  = compute(src, cultivar, (i) => i.requirements.ph, minMaxExtreme)
 
     return info
 }
 
+
+const minVal = function(arr) {
+    if(arr.every(isNaN)) return undefined
+
+    return Math.min(...arr.filter(x => !isNaN(x)))
+}
+
+const maxVal = function(arr) {
+    if(arr.every(isNaN)) return undefined
+
+    return Math.max(...arr.filter(x => !isNaN(x)))
+}
+
+const minMaxExtreme = function(array) {
+    let all = []
+    const units = []
+    array.forEach(i => {
+        let mult = 1
+        if(i.unit !== undefined) {
+            units.push(i.unit)
+            if(i.unit === 'm') {
+                mult = 100
+            }
+        }
+        if(!isNaN(i.min)) all.push(i.min * mult)
+        if(!isNaN(i.max)) all.push(i.max * mult)
+    })
+
+    if(all.length == 0) return {}
+
+    let unit = 'cm'
+    if(units.length != 0 && units.every(u => u === 'm')) {
+        unit = 'm'
+        all = all.map(a => a / 100)
+    }
+
+    const min = Math.min(...all)
+    const max = Math.max(...all)
+    return {min:min , max: min !== max ? max : undefined, unit: units.length == 0 ? undefined : unit}
+}
+
 const uniqueUnion = function(arrays) {
     const vals = {}
-    arrays.forEach(arr => arr.forEach(value => vals[value] = value))
-    const res = Object.values(vals)
+    arrays.forEach(arr => {
+        if(Array.isArray(arr)) {
+            arr.forEach(value => vals[value] = value)
+        }
+        else {
+            vals[arr] = arr
+        }
+    })
+    const res = Object.values(vals).filter(v => v !== undefined)
     res.sort()
     return res
 } 
@@ -142,6 +201,23 @@ export let addMissingInfoFields = function(info) {
     })
 }
 
+export let fillEmptyFields = function(targetInfo, sourceInfo) {
+    let keys = Object.keys(targetInfo)
+    let filled = {}
+
+    keys.forEach(k1 => {
+        // filled[k1] = {}
+        Object.keys(targetInfo[k1]).forEach(k2 => {
+            if(empyObjectValues(targetInfo[k1][k2])) {
+                Vue.set(targetInfo[k1], k2, sourceInfo[k1][k2])
+                filled[k2] = true
+            }
+        })
+    })
+
+    Vue.set(targetInfo, 'filled', filled)
+}
+
 export const addDefaultSourceIfMissing = function(plant) {
     if(!plant.sourcedInfos) {
         plant.sourcedInfos = {}
@@ -155,15 +231,8 @@ export let clearUnusedInfoFields = function(info) {
     Object.keys(info).forEach(k1 => {
         Object.keys(info[k1]).forEach(k2 => {
             const val = info[k1][k2]
-            if(k1 != 'dates') {
-                if(val === undefined || val === '' || (Array.isArray(val) && val.length === 0)) {
-                    Vue.delete(info[k1], k2)
-                }
-            }
-            else {
-                if(!val.dates.some(v => v !== 0)) {
-                    Vue.delete(info[k1], k2)
-                }
+            if(empyObjectValues(val)) {
+                Vue.delete(info[k1], k2)
             }
         })
         if(Object.keys(info[k1]).length === 0) {
@@ -193,4 +262,21 @@ export const filterSourcedInfos = function(infos) {
         }
     })
     return res
-} 
+}
+
+const empyObjectValues = function(obj) {
+
+    if(isObject(obj)) {
+        return !Object.values(obj).some(val => !empyObjectValues(val))
+    }
+    if(Array.isArray(obj)) {
+        return obj.length === 0 || (obj.every(a => a === 0) && obj.length === 24)
+    }
+    else {
+        return obj === null || obj === undefined || obj === ''
+    }
+}
+
+let isObject = function(obj) { 
+    return obj !== undefined && !Array.isArray(obj) && obj === Object(obj) 
+}

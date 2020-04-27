@@ -1,8 +1,21 @@
+<style scoped>
+/* .option + .option {
+    margin-left: 5px;
+} */
+.option {
+    display: inline-block;
+}
+.option input {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+</style>
+
 <template>
 <span>
     <span v-if="!editMode">{{ value.map(v => options[v]).join(', ') }}</span>
     <span v-else>
-        <span v-for="(option, idx) in options" :key="idx"><input type="checkbox" :checked="value.includes(idx)" @change="e => checkbox(e, idx)" />{{option}}</span>
+        <span class="option" v-for="(option, idx) in options" :key="idx"><input type="checkbox" :checked="value.includes(idx)" @change="e => checkbox(e, idx)" />{{option}}</span>
     </span>
 </span>
 </template>

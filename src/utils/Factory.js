@@ -16,9 +16,14 @@ export let Plant = function(name) {
 
 export let PlantInfo = function() {
     return {
-        properties: {},
+        properties: {
+            height: {},
+            width: {}
+        },
         requirements: {
-            soil: []
+            soil: [],
+            sun: [],
+            ph: {}
         },
         dates: {
             semis: {dates: Array(24).fill(0)},

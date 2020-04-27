@@ -1,7 +1,13 @@
+<style scoped>
+select, option, span {
+    width: 100%;
+}
+</style>
+
 <template>
 <span>
-    <span v-if="isArray && editMode">{{selectedList.join(', ')}}</span>
-    <span v-if="editMode === false">{{ selected }}</span>
+    <span v-if="isArray && !editMode">{{selectedList.join(', ')}}</span>
+    <span v-else-if="!editMode">{{ selected }}</span>
     <select v-else :value="value" v-on:input="input">
         <option v-if="acceptUndefined" :value="'__undefined__'"></option>
         <option v-for="(option, idx) in options" :key="idx" :value="idx">{{option}}</option>

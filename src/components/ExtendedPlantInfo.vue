@@ -128,7 +128,7 @@ img {
     bottom:35px;
     overflow-x:hidden;
     padding: 0;
-    padding-right: 5px;
+    /* padding-right: 5px; */
     
 }
 
@@ -148,7 +148,7 @@ img {
     margin: 0;
     padding-left: 15px;
     font-size: 17px;
-    width: 285px;
+    width: 300px;
     line-height: 40px;
 }
 
@@ -266,20 +266,23 @@ h3 {
 
 .section {
     /* background:green; */
+    position: relative;
     display: inline-block;
     width: 50%;
     margin:0;
     padding:0;  
     /* height: 500px; */
     vertical-align: top;
+    /* background: yellow; */
 }
+
 
 .dates {
     width: 40%;
 }
 
 .edit {
-    width: 50%;
+    /* width: 50%; */
 }
 
 .source-container {
@@ -293,15 +296,10 @@ h3 {
     padding-left: 20px;
 }
 
-.section >>> input {
-    text-align: left;
-    padding-left: 5px;
+.filled {
+    opacity: 0.5;
 }
 
-
-.section >>> span {
-    padding-left: 5px;
-}
 
 </style>
 
@@ -337,7 +335,7 @@ h3 {
 
         <div class="center-info">
             <div v-if="!addSourceMode">
-                <div style="text-align:center;">
+                <div>
                     <h2>Varieté: <span v-if="selectedVar === undefined">Toutes</span><span v-else>{{varieteName}}</span></h2>
                 </div>
                 <div class="info-container">
@@ -355,32 +353,31 @@ h3 {
                     <div class="section properties" :class="{edit:editMode}">
                         <h3>Propriétés</h3>
                         <table>
-                            <tr><td>Cycle:</td><td><editable-select :acceptUndefined="true" v-model="info.properties.cycle" :editMode="editMode" :options="['Anuelle', 'Bisanuelle', 'Pérenne']"/></td></tr>
-                            <tr><td>Croissance:</td><td><editable-select v-model="info.properties.growth" :editMode="editMode" :options="['Lente', 'Moyenne', 'Rapide']"/></td></tr>
-                            <tr><td>Hateur:</td><td></td></tr>
-                            <tr><td>Largeur:</td><td></td></tr>
-                            <tr><td>Feuillage:</td><td></td></tr>
+                            <tr :class="{filled: isFilled('cycle')}"><td>Cycle:</td>        <td><editable-select :acceptUndefined="true" v-model="info.properties.cycle" :editMode="editMode" :options="['Anuelle', 'Bisanuelle', 'Pérenne']"/></td></tr>
+                            <tr :class="{filled: isFilled('growth')}"><td>Croissance:</td>  <td><editable-select :acceptUndefined="true" v-model="info.properties.growth" :editMode="editMode" :options="['Lente', 'Moyenne', 'Rapide']"/></td></tr>
+                            <tr :class="{filled: isFilled('height')}"><td>Hauteur:</td>     <td><editable-interval v-model="info.properties.height" :editMode="editMode" :withUnit="true" /></td></tr>
+                            <tr :class="{filled: isFilled('width')}"><td>Largeur:</td>      <td><editable-interval v-model="info.properties.width" :editMode="editMode" :withUnit="true" /></td></tr>
+                            <tr :class="{filled: isFilled('leaf')}"><td>Feuillage:</td>     <td><editable-select :acceptUndefined="true" v-model="info.properties.leaf" :editMode="editMode" :options="['Caduc', 'Pérsistant']"/></td></tr>
                         </table>
                     </div>
 
                     <div class="section requirements" :class="{edit:editMode}">
                         <h3>Conditions</h3>
                         <table>
-                            <tr><td>Humidité:</td>          <td></td></tr>
-                            <tr><td>Secheresse:</td>        <td></td></tr>
-                            <tr><td>Temperature Min:</td>   <td></td></tr>
-                            <tr><td>Temperature Max:</td>   <td></td></tr>
-                            <tr><td>Type(s) de Sol:</td>    <td><multi-select v-model="info.requirements.soil" :editMode="editMode" :options="['sableux', 'limoneux', 'argileux']" /></td></tr>
-                            <tr><td>Soleil:</td>            <td></td></tr>
-                            <tr><td>Ombre:</td>             <td></td></tr>
-                            <tr><td>Ph:</td>                <td></td></tr>
+                            <tr :class="{filled: isFilled('moisture')}"><td>Eau:</td>               <td><editable-select :acceptUndefined="true" v-model="info.requirements.moisture" :editMode="editMode" :options="['Peu', 'Moyen', 'Beaucoup', 'Plante Aquatique']"/></td></tr>
+                            <tr :class="{filled: isFilled('drought')}"><td>Secheresse:</td>         <td><editable-select :acceptUndefined="true" v-model="info.requirements.drought" :editMode="editMode" :options="['Non Resistant', 'Peu Resistant', 'Resistant', 'Tres Resistant']"/></td></tr>
+                            <tr :class="{filled: isFilled('tempMin')}"><td>Temperature Min:</td>    <td><editable-input type="number" :editMode="editMode" v-model="info.requirements.tempMin" /> </td></tr>
+                            <tr :class="{filled: isFilled('tempMax')}"><td>Temperature Max:</td>    <td><editable-input type="number" :editMode="editMode" v-model="info.requirements.tempMax" /></td></tr>
+                            <tr :class="{filled: isFilled('soil')}"><td>Type(s) de Sol:</td>        <td><multi-select v-model="info.requirements.soil" :editMode="editMode" :options="['sableux', 'limoneux', 'argileux']" /></td></tr>
+                            <tr :class="{filled: isFilled('sun')}"><td>Soleil:</td>                 <td><multi-select v-model="info.requirements.sun" :editMode="editMode" :options="['ombre totale', 'ombragé', 'mi-soleil', 'plein soleil']" /></td></tr>
+                            <tr :class="{filled: isFilled('ph')}"><td>Ph:</td>                      <td><editable-interval v-model="info.requirements.ph" :editMode="editMode"/></td></tr>
                         </table>
                     </div>
 
                     <div class="section dates" :class="{edit:editMode}">
                         <h3>Dates</h3>
-                        <editable-calender :rows="2" :columns="6" class="calender" :editMode="editMode" label="Semis" :value="info.dates.semis" :colors="['#c69707', '#00b0b0', '#008000']"></editable-calender>
-                        <editable-calender :rows="2" :columns="6" class="calender" :editMode="editMode" label="Recoltes" :value="info.dates.recolte" :colors="['#c69707', '#904040']"></editable-calender>
+                        <editable-calender :rows="2" :columns="6" class="calender" :class="{filled: isFilled('semis')}" :editMode="editMode" label="Semis" :value="info.dates.semis" :colors="['#c69707', '#00b0b0', '#008000']"></editable-calender>
+                        <editable-calender :rows="2" :columns="6" class="calender" :class="{filled: isFilled('recolte')}" :editMode="editMode" label="Recoltes" :value="info.dates.recolte" :colors="['#c69707', '#904040']"></editable-calender>
                     </div>
                 </div>
             </div>
@@ -409,6 +406,7 @@ import EditableSelect from './EditableSelect'
 import SelectableList from './SelectableList'
 import SourceList from './SourceList'
 import MultiSelect from './MultiSelect'
+import EditableInterval from './EditableInterval'
 
 export default {
     name: 'ExtendedPlantInfo',
@@ -419,7 +417,8 @@ export default {
         EditableSelect,
         SelectableList,
         SourceList,
-        MultiSelect
+        MultiSelect,
+        EditableInterval
     },
     props: {
         editMode: {
@@ -466,6 +465,9 @@ export default {
             }
             else {
                 usedInfo = SourceUtils.computeSourcesToInfos(this.filteredSourcedInfos, this.selectedVarId)
+                if(this.selectedVar !== undefined) {
+                    SourceUtils.fillEmptyFields(usedInfo, SourceUtils.computeSourcesToInfos(this.filteredSourcedInfos))
+                }
             }
 
             // console.log('used info')
@@ -542,6 +544,11 @@ export default {
 
             this.$delete(this.plant.sourcedInfos, source._id)
             this.selectedSourceIdx = Math.max(this.selectedSourceIdx-1, 0)
+        },
+        isFilled(name) {
+            if(this.info.filled === undefined) return false
+
+            return this.info.filled[name]
         }
     },
 }

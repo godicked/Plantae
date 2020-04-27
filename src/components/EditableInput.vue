@@ -17,7 +17,7 @@ input {
  export default {
     name: 'EditableInput',
     props: {
-        value: String,
+        value: [String, Number],
         type: String,
         editMode: {
             type: Boolean,

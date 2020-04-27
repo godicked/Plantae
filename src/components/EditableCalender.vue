@@ -51,6 +51,10 @@ th
     bottom:1px;
 }
 
+/* .switch >>> span{
+    padding-left: 0 !important; 
+} */
+
 .label-left {
     overflow: hidden; 
     text-overflow: ellipsis;
@@ -63,7 +67,11 @@ th
 <div>
     <table v-if="rows * columns === 12">
         <col v-if="labelPos === 3" width="120">
-        <tr v-if="label !== undefined && labelPos === undefined"><th :colspan="columns">{{label}} <toggle-button v-if="useToggle" @change="toggleHandler" v-model="toggleState" :width="65" :color="{checked: colors[2], unchecked:colors[1]}" :labels="{checked: 'outside', unchecked: 'inside'}" class="switch"/></th></tr>
+        <tr v-if="label !== undefined && labelPos === undefined">
+            <th :colspan="columns">{{label}} 
+                <toggle-button v-if="useToggle" @change="toggleHandler" v-model="toggleState" :width="65" :color="{checked: colors[2], unchecked:colors[1]}" :labels="{checked: 'outside', unchecked: 'inside'}" class="switch"/>
+            </th>
+        </tr>
         <tr v-for="row in rows" :key="row">
             <td v-if="labelPos === 3 && label !== undefined" class="label-left">{{label}}</td>
             <td v-for="col in columns" :key="col"> 

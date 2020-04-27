@@ -1,3 +1,6 @@
+<style scoped>
+</style>
+
 <template>
 <span>
     <span v-if="selectMode === false">{{ options.join(', ') }}</span>
